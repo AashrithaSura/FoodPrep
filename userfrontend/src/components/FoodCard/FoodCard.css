@@ -1,0 +1,158 @@
+.food-item {
+  width: 100%;
+  margin: 0 auto 30px;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  background: white;
+  overflow: hidden;
+}
+
+.food-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.food-item-image-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1/1;
+  overflow: hidden;
+}
+
+.food-item-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.food-item:hover .food-item-image {
+  transform: scale(1.05);
+}
+
+.food-item-image-container .add {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  bottom: 15px;
+  right: 15px;
+  cursor: pointer;
+  border-radius: 50%;
+  background-color: rgba(224, 221, 228, 0.9);
+  padding: 10px;
+  transition: all 0.3s ease;
+  border: 2px solid white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.food-item-image-container .add:hover {
+  transform: scale(1.1);
+  background-color: rgb(166, 107, 85);
+}
+
+
+.food-item-counter {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: white;
+  padding: 5px 12px;
+  border-radius: 50px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.food-item-counter img {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.food-item-counter img:hover {
+  transform: scale(1.1);
+}
+
+.food-item-counter p {
+  font-size: 1.4rem;
+  font-weight: 600;
+  min-width: 20px;
+  text-align: center;
+  margin: 0;
+  color: #2d3436;
+}
+
+.food-item-info {
+  padding: 20px;
+}
+
+.food-item-name {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #2d3436;
+  margin-bottom: 8px;
+}
+
+.food-item-desc {
+  font-size: 1.4rem;
+  color: #636e72;
+  line-height: 1.5;
+  margin-bottom: 15px;
+}
+
+.food-item-price-rating {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.food-item-price {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #a73737;
+}
+
+.food-item-price-rating img {
+  width: 70px;
+}
+
+
+@media (max-width: 768px) {
+  .food-item {
+    margin-bottom: 20px;
+  }
+  
+  .food-item-info {
+    padding: 15px;
+  }
+  
+  .food-item-name {
+    font-size: 1.6rem;
+  }
+  
+  .food-item-desc {
+    font-size: 1.3rem;
+  }
+  
+  .food-item-price {
+    font-size: 1.8rem;
+  }
+  
+  .food-item-image-container .add {
+    width: 36px;
+    height: 36px;
+    padding: 8px;
+  }
+  
+  .food-item-counter {
+    padding: 4px 10px;
+  }
+  
+  .food-item-counter img {
+    width: 20px;
+    height: 20px;
+  }
+}
