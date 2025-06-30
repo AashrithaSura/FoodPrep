@@ -1,19 +1,38 @@
-.navbar{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 4%;
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
-.navbar .logo{
-    width: max(10%,200px);
+
+.logo {
+  height: 40px;
 }
-.navbar .profile{
-    width: 40px;
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
 }
+
 .profile {
-  width: 40px;
-  height: 42px;
+  height: 35px;
+  width: 35px;
   border-radius: 50%;
   object-fit: cover;
-  border: 1px solid #e0e0e0;
+}
+
+.logout-btn {
+  background-color: #ff4d4f;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.logout-btn:hover {
+  background-color: #d9363e;
 }

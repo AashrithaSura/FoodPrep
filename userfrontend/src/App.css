@@ -1,0 +1,10 @@
+.footer-only-view {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.footer {
+  width: 100%;
+}

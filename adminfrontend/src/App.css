@@ -2,3 +2,54 @@
   display: flex;
 
 }
+/* Toast Notification Styles */
+.Toastify__toast-container {
+  width: 320px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.Toastify__toast {
+  border-radius: 8px;
+  padding: 12px 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.Toastify__toast--success {
+  background: #618d62;
+  color: white;
+}
+
+.Toastify__toast--error {
+  background: #7e4e4a;
+  color: white;
+}
+
+.Toastify__toast--warning {
+  background: #ff9800;
+  color: white;
+}
+
+.Toastify__toast--info {
+  background: #2196f3;
+  color: white;
+}
+
+.Toastify__progress-bar {
+  height: 3px;
+}
+
+.Toastify__close-button {
+  color: white;
+  opacity: 0.8;
+}
+
+.Toastify__close-button:hover {
+  opacity: 1;
+}
+@media (max-width: 480px) {
+  .Toastify__toast-container {
+    width: 90vw;
+    left: 5vw;
+    right: 5vw;
+  }
+}

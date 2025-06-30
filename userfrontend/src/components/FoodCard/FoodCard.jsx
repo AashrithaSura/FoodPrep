@@ -1,61 +1,105 @@
-import './FoodCard.css';
-import { assets } from '../../assets/assets';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { StoreContext } from '../../context/StoreContext';
+import { assets } from '../../assets/assets';
+import StarRating from '../StarRating/StarRating';
+import './FoodCard.css';
 
 const FoodCard = ({ _id, name, price, description, image }) => {
-    const { cartItems, setCartItems, addToCart, removeFromCart } = useContext(StoreContext);
+  const { addToCart } = useContext(StoreContext);
+  const [rating, setRating] = useState(0);
+  const [isAdded, setIsAdded] = useState(false);
+  const [showFullDesc, setShowFullDesc] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
-    // Example of using setCartItems directly
-    const handleResetItem = () => {
-        setCartItems(prev => {
-            const newCart = {...prev};
-            delete newCart[_id]; // Remove this item completely
-            return newCart;
-        });
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
     };
+    checkIfMobile();
+    window.addEventListener('resize', checkIfMobile);
+    return () => window.removeEventListener('resize', checkIfMobile);
+  }, []);
 
-    return (
-        <div className='food-item'>
-            <div className="food-item-image-container">
-                <img className='food-item-image' src={image} alt={name} />
-                {!cartItems[_id] ? (
-                    <img 
-                        onClick={() => addToCart(_id)} 
-                        src={assets.add_icon_white} 
-                        className='add' 
-                        alt='Add to cart'
-                    />
-                ) : (
-                    <div className="food-item-counter">
-                        <img 
-                            onClick={() => removeFromCart(_id)} 
-                            src={assets.remove_icon_red}  
-                            alt="Remove" 
-                        />
-                        <p>{cartItems[_id]}</p>
-                        <img 
-                            onClick={() => addToCart(_id)} 
-                            src={assets.add_icon_green}  
-                            alt="Add more" 
-                        />
-                        {/* Example button using setCartItems directly */}
-                        <button onClick={handleResetItem} className="reset-btn">
-                            Reset
-                        </button>
-                    </div>
-                )}
+  useEffect(() => {
+    const savedRatings = JSON.parse(localStorage.getItem("foodRatings") || "{}");
+    if (savedRatings[_id]) {
+      setRating(savedRatings[_id]);
+    }
+  }, [_id]);
+
+  const handleRatingChange = (val) => {
+    setRating(val);
+    const savedRatings = JSON.parse(localStorage.getItem("foodRatings") || "{}");
+    savedRatings[_id] = val;
+    localStorage.setItem("foodRatings", JSON.stringify(savedRatings));
+  };
+
+  const handleAddToCart = () => {
+    addToCart(_id);
+    setIsAdded(true);
+    setTimeout(() => setIsAdded(false), 2000);
+  };
+
+  return (
+    <div className={`food-card ${isAdded ? 'added-effect' : ''}`}>
+      <div className='food-item'>
+        <div className="food-item-image-container">
+          <img 
+            className='food-item-image' 
+            src={`http://localhost:4000/uploads/${image}`} 
+            alt={name}
+            onError={(e) => {
+              console.log('Failed to load image:', image);
+              e.target.onerror = null;
+              e.target.src = assets.placeholder_image;
+            }}
+          />
+          {isAdded && (
+            <div className="added-confirmation">
+              <div className="stars-animation">
+                {[...Array(5)].map((_, i) => (
+                  <div key={i} className="star" style={{
+                    '--delay': `${i * 0.1}s`,
+                    '--angle': `${i * 72}deg`
+                  }}>★</div>
+                ))}
+              </div>
+              <p>Added to cart!</p>
             </div>
-            <div className="food-item-info">
-                <p className="food-item-name">{name}</p>
-                <p className="food-item-desc">{description}</p>
-                <div className="food-item-price-rating">
-                    <p className="food-item-price">₹{price}</p>
-                    <img src={assets.rating_starts} alt="Rating" />
-                </div>
-            </div>
+          )}
         </div>
-    );
+        <div className="food-item-info">
+          <div className="food-item-top">
+            <p className="food-item-name"><strong>{name}</strong></p>
+            <StarRating 
+              rating={rating} 
+              onRate={handleRatingChange} 
+              size={16} 
+              readOnly={false}
+            />
+          </div>
+          <div 
+            className={`food-item-desc-container ${showFullDesc ? 'show-full' : ''}`}
+            onClick={() => isMobile && setShowFullDesc(!showFullDesc)}
+          >
+            <p className="food-item-desc"><strong>{description}</strong></p>
+            
+          </div>
+          <div className="food-item-bottom">
+            <p className="food-item-price"><strong>₹{price}</strong></p>
+            <div className="slide-up-panel">
+              <button 
+                className="add-to-cart-button"
+                onClick={handleAddToCart}
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default FoodCard;

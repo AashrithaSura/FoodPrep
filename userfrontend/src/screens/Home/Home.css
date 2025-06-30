@@ -1,0 +1,35 @@
+.home-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.home-sections {
+  margin-top: 40px;
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 400px) {
+  .home-sections {
+    margin-top: 30px;
+    gap: 20px;
+    padding: 0 10px;
+  }
+
+  .slide-overlay {
+    max-width: 90%;
+    padding: 15px;
+  }
+
+  .slide-overlay h2 {
+    font-size: 1.5rem;
+  }
+
+  .slide-overlay p {
+    font-size: 0.9rem;
+  }
+}
