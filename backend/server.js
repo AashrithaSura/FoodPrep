@@ -54,7 +54,7 @@ const cartRouter = require('./routes/cartRouter');
 const orderRouter = require('./routes/orderRouter'); 
 const promoRouter = require('./routes/promoRouter');
 
-app.use('/api/food', foodRouter);
+app.use('/api', foodRouter);
 app.use('/api/user', userRouter);
 app.use('/api/cart', cartRouter);
 app.use('/api/order', orderRouter); 

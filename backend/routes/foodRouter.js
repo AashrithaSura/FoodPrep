@@ -34,7 +34,7 @@ function checkFileType(file, cb) {
 }
 
 foodRouter.post('/add', upload.single('image'), addFood);
-foodRouter.get('/list', listFood);
+foodRouter.get('/food/list', listFood);
 foodRouter.delete('/:id', removeFood);
 
 module.exports = foodRouter;
