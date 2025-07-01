@@ -46,7 +46,7 @@ const FoodCard = ({ _id, name, price, description, image }) => {
         <div className="food-item-image-container">
           <img 
             className='food-item-image' 
-            src={`https://foodprepuser-dcw2.onrender.com/uploads/${image}`} 
+            src={`http://localhost:4000/uploads/${image}`} 
             alt={name}
             onError={(e) => {
               console.log('Failed to load image:', image);

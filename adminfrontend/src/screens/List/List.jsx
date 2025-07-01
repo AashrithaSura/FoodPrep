@@ -10,7 +10,7 @@ const List = ({ url }) => {
 
   const fetchList = async () => {
     try {
-      const response = await axios.get(`${url}/api/list`);
+      const response = await axios.get(`${url}/api/food/list`);
       setList(response.data.data);
     } catch (error) {
       toast.error('Failed to load food items');

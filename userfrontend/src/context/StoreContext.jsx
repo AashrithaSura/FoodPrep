@@ -7,11 +7,11 @@ const StoreContextProvider = ({ children, setShowLogin }) => {
   const [cartItems, setCartItems] = useState({});
   const [token, setToken] = useState(null);
   const [food_list, setFoodList] = useState([]);
-  const url = "https://foodprepuser-dcw2.onrender.com";
+  const url = "http://localhost:4000";
 
   const fetchFoodList = async () => {
     try {
-      const response = await axios.get(`${url}/api/list`);
+      const response = await axios.get(`${url}/api/food/list`);
       setFoodList(response.data.data);
     } catch (error) {
       console.error("Failed to fetch food list:", error.response?.data || error.message);
