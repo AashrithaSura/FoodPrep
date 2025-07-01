@@ -12,7 +12,7 @@ import Logout from './components/Logout/Logout';
 import './App.css';
 import { StoreContext } from './context/StoreContext'; 
 
-const url = 'http://localhost:4000';
+const url = 'https://foodprepuser-1y1b.onrender.com/';
 
 const App = () => {
   const { loginPopup } = useContext(StoreContext); 

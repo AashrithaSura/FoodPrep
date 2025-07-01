@@ -11,7 +11,7 @@ const app = express();
 const port = process.env.PORT || 4000;
 
 // Allow multiple frontend origins (user and admin frontends)
-const allowedOrigins = ['http://localhost:5173', 'http://localhost:5174'];
+const allowedOrigins = ['https://foodprepuser-1y1b.onrender.com/', 'http://localhost:5174'];
 
 app.use(cors({
   origin: function (origin, callback) {
