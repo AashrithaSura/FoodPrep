@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import { StoreContext } from '../../context/StoreContext';
 import './Add.css';
 
-const Add = ({ url = "http://localhost:4000" }) => {
+const Add = ({ url = "https://foodprepbackend-53br.onrender.com" }) => {
   const { admin, setLoginPopup } = useContext(StoreContext); 
 
   const [image, setImage] = useState(false);
