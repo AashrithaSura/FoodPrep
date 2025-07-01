@@ -230,7 +230,7 @@
 }
 
 
-@media (max-width: 768px) {
+@media (max-width: 400px) {
   .order-body {
     flex-direction: column;
   }
@@ -242,27 +242,4 @@
   }
 }
 
-@media (max-width: 480px) {
-  .order-body {
-    align-items: center;
-    text-align: center;
-  }
-  
-  .order-details {
-    align-items: center;
-  }
-  
-  .order-meta {
-    justify-content: center;
-  }
-  
-  .order-header {
-    flex-direction: column;
-    gap: 8px;
-    align-items: center;
-  }
-  
-  .order-footer {
-    justify-content: center;
-  }
-}
+
