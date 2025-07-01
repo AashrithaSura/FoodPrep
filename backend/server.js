@@ -11,9 +11,9 @@ const app = express();
 const port = process.env.PORT || 4000;
 
 const allowedOrigins = [
-  'http://localhost:5173', 
-  'http://localhost:5174',
-  'http://localhost:4173'
+  'http://localhost:5173', // User frontend
+  'http://localhost:5174', // Admin frontend
+
 ];
 
 app.use(cors({
