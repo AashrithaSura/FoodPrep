@@ -1,7 +1,6 @@
 import { useContext, useState, useEffect } from 'react';
 import { StoreContext } from '../../context/StoreContext';
 import FoodCard from '../FoodCard/FoodCard';
-import Loader from '../Loader/Loader'; // ✅ loader import
 import './FoodDisplay.css';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 
@@ -11,7 +10,7 @@ const FoodDisplay = ({ category }) => {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [currentCategory, setCurrentCategory] = useState(category);
   const [scrollPosition, setScrollPosition] = useState(0);
-  const [isLoading, setIsLoading] = useState(true); // ✅ loading state
+
 
   const filteredItems = food_list.filter(
     (item) => category === 'All' || category === item.category
@@ -51,8 +50,6 @@ const FoodDisplay = ({ category }) => {
     setScrollPosition(newPosition);
     container.scrollLeft = newPosition;
   };
-
-  if (isLoading) return <Loader />; // ✅ Show loader during API fetch
 
   return (
     <div
