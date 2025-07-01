@@ -2,7 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const connectDB = require('./config/dbConn');
-
+const path = require('path');
+const morgan = require('morgan'); // For request logging
 
 // Load environment variables
 dotenv.config();
@@ -10,27 +11,34 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 4000;
 
-
-app.get('/favicon.ico', (req, res) => res.status(204).end());
-
-// Allow multiple frontend origins (user and admin frontends)
-const allowedOrigins = ['https://foodprepuser-1y1b.onrender.com/','http://localhost:5173','http://localhost:5174'];
+// Enhanced CORS configuration
+const allowedOrigins = [
+  'http://localhost:5173', // User frontend
+  'http://localhost:5174', // Admin frontend
+  'https://foodprepuser-1y1b.onrender.com' // Your production frontend
+];
 
 app.use(cors({
   origin: function (origin, callback) {
     // Allow requests with no origin (like mobile apps or curl)
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS: ' + origin));
+      const msg = `CORS policy: ${origin} not allowed`;
+      console.warn(msg); // Log CORS violations
+      return callback(new Error(msg), false);
     }
   },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
 }));
 
 // Middleware
 app.use(express.json());
-
+app.use(morgan('dev')); // HTTP request logger
 
 // Connect to DB
 connectDB();
@@ -48,21 +56,53 @@ app.use('/api/cart', cartRouter);
 app.use('/api/order', orderRouter); 
 app.use('/api/promo', promoRouter);
 
-// Serve uploaded images
-app.use('/uploads', express.static('uploads'));
+// Serve static files
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    status: 'OK',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime()
+  });
+});
 
 // Test route
 app.get('/', (req, res) => {
-  res.send("API working");
+  res.json({
+    message: "FoodPrep API is working",
+    version: "1.0.0",
+    docs: "/api-docs" // If you have API documentation
+  });
 });
 
-// Error handler
+// Enhanced error handler
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send('Server Error');
+  console.error(`[${new Date().toISOString()}] Error:`, err.stack);
+  
+  // Handle CORS errors specifically
+  if (err.message.includes('CORS policy')) {
+    return res.status(403).json({
+      success: false,
+      error: err.message
+    });
+  }
+
+  res.status(500).json({
+    success: false,
+    error: 'Internal Server Error',
+    message: process.env.NODE_ENV === 'development' ? err.message : undefined
+  });
 });
 
 // Start server
-app.listen(port, () => {
+const server = app.listen(port, '0.0.0.0', () => {
   console.log(`Server running on http://localhost:${port}`);
+});
+
+// Handle unhandled promise rejections
+process.on('unhandledRejection', (err) => {
+  console.error(`Unhandled Rejection: ${err.stack}`);
+  server.close(() => process.exit(1));
 });
