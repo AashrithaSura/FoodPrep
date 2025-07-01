@@ -3,14 +3,16 @@ import { StoreContext } from '../../context/StoreContext';
 import { assets } from '../../assets/assets';
 import StarRating from '../StarRating/StarRating';
 import './FoodCard.css';
+import axios from 'axios';
 
-const FoodCard = ({ _id, name, price, description, image }) => {
-  const { addToCart } = useContext(StoreContext);
-  const [rating, setRating] = useState(0);
+const FoodCard = ({ _id, name, price, description, image, adminRating }) => {
+  const { addToCart, userId, url } = useContext(StoreContext);
+  const [rating, setRating] = useState(adminRating || 0); // Start with adminRating
   const [isAdded, setIsAdded] = useState(false);
   const [showFullDesc, setShowFullDesc] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
+  // Detect device type
   useEffect(() => {
     const checkIfMobile = () => {
       setIsMobile(window.innerWidth <= 768);
@@ -20,18 +22,33 @@ const FoodCard = ({ _id, name, price, description, image }) => {
     return () => window.removeEventListener('resize', checkIfMobile);
   }, []);
 
+  // Load user's rating from backend if logged in
   useEffect(() => {
-    const savedRatings = JSON.parse(localStorage.getItem("foodRatings") || "{}");
-    if (savedRatings[_id]) {
-      setRating(savedRatings[_id]);
-    }
-  }, [_id]);
+    if (!userId) return;
+
+    axios.get(`${url}/rating/user/${userId}`)
+      .then(res => {
+        const userRating = res.data.ratings.find(r => r.foodId === _id);
+        if (userRating) setRating(userRating.rating);
+      })
+      .catch(err => console.error("Failed to fetch user rating", err));
+  }, [userId, _id]);
 
   const handleRatingChange = (val) => {
-    setRating(val);
-    const savedRatings = JSON.parse(localStorage.getItem("foodRatings") || "{}");
-    savedRatings[_id] = val;
-    localStorage.setItem("foodRatings", JSON.stringify(savedRatings));
+    if (!userId) {
+      alert("Please log in to rate.");
+      return;
+    }
+
+    setRating(val); // Optimistic UI
+
+    axios.post(`${url}/rating`, {
+      userId,
+      foodId: _id,
+      rating: val
+    }).catch(err => {
+      console.error("Rating submission failed", err);
+    });
   };
 
   const handleAddToCart = () => {
@@ -68,23 +85,25 @@ const FoodCard = ({ _id, name, price, description, image }) => {
             </div>
           )}
         </div>
+
         <div className="food-item-info">
           <div className="food-item-top">
             <p className="food-item-name"><strong>{name}</strong></p>
             <StarRating 
               rating={rating} 
-              onRate={handleRatingChange} 
-              size={16} 
-              readOnly={false}
+              onRate={handleRatingChange}
+              size={16}
+              readOnly={!userId}
             />
           </div>
+
           <div 
             className={`food-item-desc-container ${showFullDesc ? 'show-full' : ''}`}
             onClick={() => isMobile && setShowFullDesc(!showFullDesc)}
           >
             <p className="food-item-desc"><strong>{description}</strong></p>
-            
           </div>
+
           <div className="food-item-bottom">
             <p className="food-item-price"><strong>₹{price}</strong></p>
             <div className="slide-up-panel">

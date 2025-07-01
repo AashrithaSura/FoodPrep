@@ -28,6 +28,9 @@ app.use('/api/user', require('./routes/userRouter'));
 app.use('/api/cart', require('./routes/cartRouter'));
 app.use('/api/order', require('./routes/orderRouter')); 
 app.use('/api/promo', require('./routes/promoRouter'));
+app.use('/api/rating',require('./routes/ratingRouter'));
+
+
 
 // Static files
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));

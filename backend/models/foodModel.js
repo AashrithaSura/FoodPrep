@@ -11,7 +11,7 @@ const foodSchema = new mongoose.Schema(
       required: true
     },
     price: {
-      type: "Number", 
+      type: Number,  // no quotes around Number
       required: true
     },
     image: {
@@ -22,9 +22,14 @@ const foodSchema = new mongoose.Schema(
       type: String,
       required: true
     },
-  }
-)
+    adminRating: {
+      type: Number,
+      default: 0  
+    }
+  },
+  { timestamps: true } 
+);
+
 const foodModel = mongoose.models.food || mongoose.model("food", foodSchema);
 
 module.exports = foodModel;
-
