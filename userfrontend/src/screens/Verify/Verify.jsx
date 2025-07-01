@@ -38,7 +38,7 @@ const Verify = () => {
 
     useEffect(() => {
         verifyPayment()
-    }, [success, orderId, url]) // Added dependencies
+    }, [success, orderId, url]) 
 
     if (error) {
         return (
