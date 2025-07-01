@@ -11,7 +11,7 @@ const app = express();
 const port = process.env.PORT || 4000;
 
 const allowedOrigins = [
-  'http://localhost:5173', // User frontend
+  'hhttps://food-prep-ewf4.onrender.com/', // User frontend
   'http://localhost:5174', // Admin frontend
 
 ];
