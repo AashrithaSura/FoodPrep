@@ -6,7 +6,6 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 const PlaceOrder = async (req, res) => {
   const frontend_url = process.env.FRONTEND_URL || "https://foodprepuser-vofr.onrender.com";
-
   try {
     console.log('Received order request from user:', req.userId);
     console.log('Request body:', req.body);
@@ -267,12 +266,4 @@ const rateItem = async (req, res) => {
   }
 };
 
-module.exports = {
-  PlaceOrder,
-  verifyOrder,
-  userOrders,
-  listOrders,
-  updateStatus,
-  cancelOrder,
-  rateItem
-};
+module.exports = {PlaceOrder,verifyOrder,userOrders, listOrders,updateStatus,cancelOrder,rateItem };
