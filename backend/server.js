@@ -12,7 +12,7 @@ const port = process.env.PORT || 4000;
 
 // Simplified and fixed CORS configuration
 app.use(cors({
-  origin: ['http://localhost:5173', 'https://foodprepuser-vofr.onrender.com'], 
+  origin: ['https://foodprepadmin-1i5l.onrender.com', 'https://foodprepuser-vofr.onrender.com'], 
   credentials: true
 }));
 
