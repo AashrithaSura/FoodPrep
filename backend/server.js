@@ -10,8 +10,11 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 4000;
 
+
+app.get('/favicon.ico', (req, res) => res.status(204).end());
+
 // Allow multiple frontend origins (user and admin frontends)
-const allowedOrigins = ['https://foodprepuser-1y1b.onrender.com/', 'http://localhost:5174'];
+const allowedOrigins = ['https://foodprepuser-1y1b.onrender.com/','http://localhost:5173','http://localhost:5174'];
 
 app.use(cors({
   origin: function (origin, callback) {
