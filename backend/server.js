@@ -10,32 +10,36 @@ dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 4000;
-
-// Enhanced CORS configuration
 const allowedOrigins = [
-  'http://localhost:5173', // User frontend
-  'http://localhost:5174', // Admin frontend
-  'https://foodprepuser-1y1b.onrender.com' // Your production frontend
+  'http://localhost:5173', 
+  'http://localhost:5174', 
+  'https://foodprepuser-dcw2.onrender.com'
+  
 ];
 
 app.use(cors({
   origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl)
     if (!origin) return callback(null, true);
     
-    if (allowedOrigins.includes(origin)) {
+    const normalizedOrigin = origin.toLowerCase();
+    const isAllowed = allowedOrigins.some(allowed => 
+      allowed.toLowerCase() === normalizedOrigin
+    );
+    
+    if (isAllowed) {
       return callback(null, true);
     } else {
-      const msg = `CORS policy: ${origin} not allowed`;
-      console.warn(msg); // Log CORS violations
+      const msg = `CORS policy: ${origin} not allowed. Allowed: ${allowedOrigins.join(', ')}`;
+      console.warn(msg);
       return callback(new Error(msg), false);
     }
   },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  credentials: true,
+  preflightContinue: false,
+  optionsSuccessStatus: 204
 }));
-
 // Middleware
 app.use(express.json());
 app.use(morgan('dev')); // HTTP request logger
