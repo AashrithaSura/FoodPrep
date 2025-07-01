@@ -7,6 +7,7 @@ import Navbar from "./components/Navbar/Navbar";
 import Footer from "./components/Footer/Footer";
 import LoginPopup from "./components/LoginPopup/LoginPopup";
 import Profile from "./components/Profile/Profile";
+import ProfileSaved from "./components/ProfileSaved/ProfileSaved";
 import Settings from "./components/Settings/Settings";
 import StoreContextProvider from "./context/StoreContext";
 
@@ -16,6 +17,7 @@ import PlaceOrder from "./screens/PlaceOrder/PlaceOrder";
 import MyOrders from "./screens/MyOrders/MyOrders";
 import Verify from "./screens/Verify/Verify";
 import ExploreMenu from "./components/ExploreMenu/ExploreMenu";
+ 
 
 const App = () => {
   const [showLogin, setShowLogin] = useState(false);
@@ -56,6 +58,7 @@ const App = () => {
               <Route path="/verify" element={<Verify />} />
               <Route path="/myorders" element={<MyOrders />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/profile-saved" element={<ProfileSaved />} />
               <Route path="/settings" element={<Settings />} />
 
             </Routes>

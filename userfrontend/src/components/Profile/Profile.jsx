@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
 import './Profile.css';
 
 const Profile = () => {
+  const navigate = useNavigate();
   const [user, setUser] = useState({
     name: '',
     email: '',
@@ -29,10 +31,9 @@ const Profile = () => {
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-    
+
     if (name === 'profileImage') {
       if (!files || !files[0]) return;
-      
       const reader = new FileReader();
       reader.onloadend = () => {
         const updatedUser = { ...user, profileImage: reader.result };
@@ -48,9 +49,15 @@ const Profile = () => {
   };
 
   const handleDateChange = (e) => {
-    const date = new Date(e.target.value);
-    const formattedDate = date.toISOString().split('T')[0]; // YYYY-MM-DD format
-    const updatedUser = { ...user, birthdate: formattedDate };
+    const input = e.target.value;
+    const updatedUser = { ...user, birthdate: input };
+    setUser(updatedUser);
+    localStorage.setItem('userProfile', JSON.stringify(updatedUser));
+  };
+
+  const handleAgeChange = (e) => {
+    const input = e.target.value;
+    const updatedUser = { ...user, age: input };
     setUser(updatedUser);
     localStorage.setItem('userProfile', JSON.stringify(updatedUser));
   };
@@ -60,15 +67,11 @@ const Profile = () => {
     localStorage.setItem('userProfile', JSON.stringify(user));
     toast.success('Profile updated successfully!', {
       position: "top-right",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
+      autoClose: 2000,
+      onClose: () => navigate('/profile-saved'),
     });
   };
 
-  // Calculate max date for birthdate (18 years ago)
   const today = new Date();
   const maxDate = new Date();
   maxDate.setFullYear(today.getFullYear() - 18);
@@ -81,7 +84,7 @@ const Profile = () => {
         <h2>Your Profile</h2>
         <p className="welcome-message">Update your personal information</p>
       </div>
-      
+
       <form onSubmit={handleSubmit}>
         <div className="profile-card">
           <div className="avatar-section">
@@ -92,16 +95,16 @@ const Profile = () => {
             />
             <label className="upload-btn">
               Change Photo
-              <input 
-                type="file" 
-                name="profileImage" 
-                accept="image/*" 
+              <input
+                type="file"
+                name="profileImage"
+                accept="image/*"
                 onChange={handleChange}
                 style={{ display: 'none' }}
               />
             </label>
           </div>
-          
+
           <div className="profile-details">
             <div className="form-row">
               <div className="form-group">
@@ -116,7 +119,7 @@ const Profile = () => {
                   required
                 />
               </div>
-              
+
               <div className="form-group">
                 <label htmlFor="email">Email Address</label>
                 <input
@@ -143,7 +146,7 @@ const Profile = () => {
                   placeholder="+1 (123) 456-7890"
                 />
               </div>
-              
+
               <div className="form-group">
                 <label htmlFor="gender">Gender</label>
                 <select
@@ -174,7 +177,7 @@ const Profile = () => {
                   min={minDate.toISOString().split('T')[0]}
                 />
               </div>
-              
+
               <div className="form-group">
                 <label htmlFor="age">Age</label>
                 <input
@@ -182,11 +185,10 @@ const Profile = () => {
                   type="number"
                   name="age"
                   value={user.age}
-                  onChange={handleChange}
+                  onChange={handleAgeChange}
                   placeholder="30"
                   min="18"
                   max="100"
-                  readOnly={!!user.birthdate} // Auto-calculate if birthdate exists
                 />
               </div>
             </div>
@@ -206,9 +208,7 @@ const Profile = () => {
         </div>
 
         <div className="form-actions">
-          <button type="submit" className="submit-btn">
-            Save Profile
-          </button>
+          <button type="submit" className="submit-btn">Save Profile</button>
         </div>
       </form>
     </div>

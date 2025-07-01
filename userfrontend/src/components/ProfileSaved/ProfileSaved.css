@@ -1,0 +1,145 @@
+.profile-saved-container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 2rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.profile-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.profile-header h2 {
+  color: #4361ee;
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.success-message {
+  color: #4bb543;
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.profile-view {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 3rem;
+}
+
+.profile-card {
+  display: flex;
+  gap: 4rem;
+  margin-bottom: 3rem;
+}
+
+.avatar-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 250px;
+}
+
+.profile-avatar {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 5px solid #f8f9fa;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.profile-details {
+  flex: 1;
+}
+
+.profile-details h3 {
+  font-size: 1.8rem;
+  color: #212529;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #f1f3f5;
+}
+
+.detail-row {
+  display: flex;
+  margin-bottom: 1.5rem;
+  font-size: 1.6rem;
+}
+
+.detail-label {
+  font-weight: 600;
+  color: #495057;
+  min-width: 150px;
+}
+
+.detail-value {
+  color: #212529;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.edit-btn, .home-btn {
+  padding: 1rem 2rem;
+  border-radius: 6px;
+  font-size: 1.6rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.edit-btn {
+  background-color: #4361ee;
+  color: white;
+  border: 2px solid #4361ee;
+}
+
+.edit-btn:hover {
+  background-color: #3a56d4;
+  transform: translateY(-2px);
+}
+
+.home-btn {
+  background-color: white;
+  color: #4361ee;
+  border: 2px solid #4361ee;
+}
+
+.home-btn:hover {
+  background-color: #f8f9fa;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .profile-card {
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .avatar-section {
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+
+  .detail-row {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .edit-btn, .home-btn {
+    width: 100%;
+    text-align: center;
+  }
+}
