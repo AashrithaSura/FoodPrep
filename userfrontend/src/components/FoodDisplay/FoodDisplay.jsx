@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from 'react';
+import { useContext, useState, useEffect, useRef, useMemo } from 'react';
 import { StoreContext } from '../../context/StoreContext';
 import FoodCard from '../FoodCard/FoodCard';
 import './FoodDisplay.css';
@@ -10,11 +10,12 @@ const FoodDisplay = ({ category }) => {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [currentCategory, setCurrentCategory] = useState(category);
   const [scrollPosition, setScrollPosition] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const containerRef = useRef(null);
 
-
-  const filteredItems = food_list.filter(
-    (item) => category === 'All' || category === item.category
-  );
+  const filteredItems = useMemo(() => {
+    return food_list.filter(item => category === 'All' || category === item.category);
+  }, [food_list, category]);
 
   useEffect(() => {
     if (!food_list.length) {
@@ -30,32 +31,42 @@ const FoodDisplay = ({ category }) => {
         setDisplayItems(filteredItems);
         setCurrentCategory(category);
         setScrollPosition(0);
+        if (containerRef.current) {
+          containerRef.current.scrollLeft = 0;
+        }
         setTimeout(() => setIsTransitioning(false), 300);
       }, 300);
     } else {
       setDisplayItems(filteredItems);
     }
-  }, [category, food_list]);
+  }, [category, food_list, currentCategory, filteredItems]);
 
   const scrollLeft = () => {
-    const container = document.getElementById('food-scroll-container');
-    const newPosition = Math.max(0, scrollPosition - 350);
-    setScrollPosition(newPosition);
-    container.scrollLeft = newPosition;
+    if (containerRef.current) {
+      const newPosition = Math.max(0, containerRef.current.scrollLeft - 350);
+      containerRef.current.scrollTo({
+        left: newPosition,
+        behavior: 'smooth'
+      });
+      setScrollPosition(newPosition);
+    }
   };
 
   const scrollRight = () => {
-    const container = document.getElementById('food-scroll-container');
-    const newPosition = scrollPosition + 350;
-    setScrollPosition(newPosition);
-    container.scrollLeft = newPosition;
+    if (containerRef.current) {
+      const newPosition = containerRef.current.scrollLeft + 350;
+      containerRef.current.scrollTo({
+        left: newPosition,
+        behavior: 'smooth'
+      });
+      setScrollPosition(newPosition);
+    }
   };
 
+  if (isLoading) return <div className="loading-spinner">Loading...</div>;
+
   return (
-    <div
-      className={`food-display ${isTransitioning ? 'flip-transition' : ''}`}
-      id="food-display"
-    >
+    <div className={`food-display ${isTransitioning ? 'flip-transition' : ''}`}>
       <h2 className="display-title">
         {category === 'All' ? 'Top dishes near you' : `Best ${category} near you`}
         <span className="title-decoration"></span>
@@ -63,44 +74,47 @@ const FoodDisplay = ({ category }) => {
 
       <div className="food-display-container">
         {displayItems.length > 0 && (
-          <button
-            className="scroll-button left"
-            onClick={scrollLeft}
-            disabled={scrollPosition === 0}
-          >
-            <FaArrowLeft />
-          </button>
-        )}
+          <>
+            <button
+              className="scroll-button left"
+              onClick={scrollLeft}
+              disabled={scrollPosition === 0}
+              aria-label="Scroll left"
+            >
+              <FaArrowLeft />
+            </button>
 
-        <div
-          id="food-scroll-container"
-          className={`food-display-list ${isTransitioning ? 'hidden' : ''}`}
-        >
-          {displayItems.map((item) => (
-            <div className="food-card-wrapper" key={item._id}>
-              <FoodCard
-                _id={item._id}
-                name={item.name}
-                price={item.price}
-                image={item.image}
-                description={item.description}
-              />
+            <div
+              ref={containerRef}
+              className={`food-display-list ${isTransitioning ? 'hidden' : ''}`}
+            >
+              {displayItems.map((item) => (
+                <div className="food-card-wrapper" key={item._id}>
+                  <FoodCard
+                    _id={item._id}
+                    name={item.name}
+                    price={item.price}
+                    image={item.image}
+                    description={item.description}
+                    loading="lazy"
+                  />
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
 
-        {displayItems.length > 0 && (
-          <button
-            className="scroll-button right"
-            onClick={scrollRight}
-            disabled={scrollPosition >= displayItems.length * 350 - 1200}
-          >
-            <FaArrowRight />
-          </button>
+            <button
+              className="scroll-button right"
+              onClick={scrollRight}
+              disabled={scrollPosition >= displayItems.length * 350 - 1200}
+              aria-label="Scroll right"
+            >
+              <FaArrowRight />
+            </button>
+          </>
         )}
       </div>
 
-      {displayItems.length === 0 && !isTransitioning && (
+      {!isLoading && displayItems.length === 0 && !isTransitioning && (
         <div className="no-items-message">
           <p>No items found in this category. Check back later!</p>
         </div>
