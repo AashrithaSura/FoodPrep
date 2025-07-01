@@ -229,52 +229,40 @@
   to { opacity: 1; transform: scale(1); }
 }
 
+
 @media (max-width: 768px) {
-  .my-orders {
-    padding: 15px;
-  }
-  
-  .order-header {
+  .order-body {
     flex-direction: column;
   }
-  
-  .order-date {
-    text-align: left;
-  }
-  
-  .order-body {
-    flex-direction: row;
-    padding: 15px;
-  }
-  
-  .order-details {
-    width: calc(100% - 70px);
-  }
-  
   .order-meta {
-    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .order-icon {
+    align-self: center;
   }
 }
 
 @media (max-width: 480px) {
   .order-body {
-    flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
+    text-align: center;
   }
   
-  .order-icon {
-    align-self: center;
+  .order-details {
+    align-items: center;
   }
   
   .order-meta {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 5px;
+    justify-content: center;
   }
   
-  .order-item-rating {
+  .order-header {
     flex-direction: column;
-    align-items: flex-start;
-    gap: 5px;
+    gap: 8px;
+    align-items: center;
+  }
+  
+  .order-footer {
+    justify-content: center;
   }
 }
