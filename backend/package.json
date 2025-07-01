@@ -3,9 +3,12 @@
   "version": "2.0.0",
   "description": "",
   "main": "server.js",
-  "scripts": {
-    "server": "nodemon server.js"
-  },
+"scripts": {
+  "start": "node server.js",
+  "server": "nodemon server.js",
+  "build": "echo 'No build step needed for backend'"
+}
+,
   "author": "",
   "license": "ISC",
   "dependencies": {
