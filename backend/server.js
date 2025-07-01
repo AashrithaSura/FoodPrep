@@ -12,7 +12,7 @@ const port = process.env.PORT || 4000;
 
 // Simplified CORS configuration
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:5174'],
+  origin: ['http://localhost:5173', 'https://foodprepuser-vofr.onrender.com/'],
 }));
 
 // Middleware
