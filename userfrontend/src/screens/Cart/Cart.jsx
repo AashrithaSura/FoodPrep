@@ -81,7 +81,7 @@ const Cart = () => {
                     return (
                         <div className="cart-items-item" key={food._id}>
                             <img
-                                src={`http://localhost:4000/uploads/${food.image}`}
+                                src={`https://foodprepuser-dcw2.onrender.com/uploads/${food.image}`}
                                 alt={food.name}
                                 className="food-image"
                                 onError={(e) => {
