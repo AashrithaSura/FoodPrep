@@ -7,7 +7,7 @@ const StoreContextProvider = ({ children, setShowLogin }) => {
   const [cartItems, setCartItems] = useState({});
   const [token, setToken] = useState(null);
   const [food_list, setFoodList] = useState([]);
-  const url = "https://foodprepbackend-ju1g.onrender.com";
+  const url = "http://localhost:4000";
 
   const fetchFoodList = async () => {
     try {

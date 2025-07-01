@@ -5,7 +5,7 @@ require('dotenv').config();
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 const PlaceOrder = async (req, res) => {
-  const frontend_url = process.env.FRONTEND_URL || "hhttps://food-prep-ewf4.onrender.com//";
+  const frontend_url = process.env.FRONTEND_URL || "http://localhost:5173/";
 
   try {
     console.log('Received order request from user:', req.userId);

@@ -4,7 +4,7 @@ import axios from "axios";
 import "./LoginPopup.css";
 import { toast } from "react-toastify";
 
-const LoginPopup = ({ url }) => {
+const LoginPopup = ({ url}) => {
   const { setAdmin, setToken, setLoginPopup } = useContext(StoreContext);
 
   const [data, setData] = useState({
