@@ -16,5 +16,5 @@ export const assets ={
     parcel_icon
 }
 
-export const url = 'https://foodprepbackend-53br.onrender.com'
+export const url = 'http://localhost:4000'
 export default assets;
