@@ -12,8 +12,9 @@ const Cart = () => {
   const [promoError, setPromoError] = useState('');
   const navigate = useNavigate();
 
-  const calculatedTotalAmount = food_list.reduce((acc, food) => {
-    const quantity = cartItems[food._id] || 0;
+  const calculatedTotalAmount = Object.entries(cartItems).reduce((acc, [foodId, quantity]) => {
+    const food = food_list.find(f => f._id === foodId);
+    if (!food) return acc;
     return acc + quantity * food.price;
   }, 0);
 
@@ -29,8 +30,8 @@ const Cart = () => {
       const response = await axios.get(`${url}/api/promo/validate`, {
         params: {
           code: promoCode,
-          subtotal: calculatedTotalAmount
-        }
+          subtotal: calculatedTotalAmount,
+        },
       });
       setAppliedPromo(response.data.promo);
       setPromoError('');
@@ -73,61 +74,49 @@ const Cart = () => {
   return (
     <div className="cart">
       <div className="cart-items-title">
-        <p>Item</p> <p>Price</p> <p>Quantity</p> <p>Total</p> <p>Modify</p>
+        <p>Items</p> <p>Title</p> <p>Price</p> <p>Quantity</p> <p>Total</p> <p>Modify</p>
       </div>
       <br /> <hr />
 
-      <table className="cart-table">
-  <thead>
-    <tr>
-      <th>Item</th>
-      <th>Price</th>
-      <th>Quantity</th>
-      <th>Total</th>
-      <th>Modify</th>
-    </tr>
-  </thead>
-  <tbody>
-    {food_list.map((food) => {
-      if (cartItems[food._id] > 0) {
-        return (
-          <tr key={food._id}>
-            <td>
-              <div className="cart-item-image-title">
+      {food_list.map((food) => {
+        if (cartItems[food._id] > 0) {
+          return (
+            <div className="cart-items-item" key={food._id}>
+              <div className="cart-item-info">
                 <img
                   src={food.image}
                   alt={food.name}
-                  className="item-image"
+                  className="food-image"
                   onError={(e) => {
                     e.target.onerror = null;
                     e.target.src = assets.placeholder_image;
                   }}
                 />
-                <span>{food.name}</span>
+                <p>{food.name}</p>
               </div>
-            </td>
-            <td>₹{food.price}</td>
-            <td>{cartItems[food._id]}</td>
-            <td>₹{(cartItems[food._id] * food.price).toFixed(2)}</td>
-            <td>
+              <p>₹{food.price}</p>
+              <p>{cartItems[food._id]}</p>
+              <p>₹{(cartItems[food._id] * food.price).toFixed(2)}</p>
               <div className="modify-actions">
-                <button onClick={() => removeFromCart(food._id)} className="modify-btn remove-btn">
+                <button
+                  onClick={() => removeFromCart(food._id)}
+                  className="modify-btn remove-btn"
+                >
                   <img src={assets.remove_icon_red} alt="Remove" />
                 </button>
                 <span className="quantity-display">{cartItems[food._id]}</span>
-                <button onClick={() => addToCart(food._id)} className="modify-btn add-btn">
+                <button
+                  onClick={() => addToCart(food._id)}
+                  className="modify-btn add-btn"
+                >
                   <img src={assets.add_icon_green} alt="Add" />
                 </button>
               </div>
-            </td>
-          </tr>
-        );
-      }
-      return null;
-    })}
-  </tbody>
-</table>
-
+            </div>
+          );
+        }
+        return null;
+      })}
 
       <div className="cart-totals-container">
         <h2 className="cart-totals-title">Cart Totals</h2>
@@ -189,7 +178,6 @@ const Cart = () => {
               <p>₹{finalTotal.toFixed(2)}</p>
             </div>
           </div>
-
           <button
             className="checkout-btn"
             onClick={handleCheckout}
@@ -204,3 +192,4 @@ const Cart = () => {
 };
 
 export default Cart;
+

@@ -1,44 +1,49 @@
+/* General Cart Styles */
 .cart {
-  max-width: 1200px;
-  margin: auto;
-  padding: 1rem;
+  padding: 16px;
+  font-family: 'Segoe UI', sans-serif;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
-.cart-items-title,
-.cart-table thead {
-  display: none;
+.cart-items-title {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  padding: 10px 0;
+  font-size: 14px;
+  border-bottom: 1px solid #ccc;
 }
 
-.cart-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 2rem;
+.cart-items-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding: 12px 0;
+  border-bottom: 1px solid #eee;
 }
 
-.cart-table td, .cart-table th {
-  padding: 0.5rem;
-  border-bottom: 1px solid #ddd;
-  text-align: center;
-}
-
-.cart-item-image-title {
+.cart-item-info {
   display: flex;
   align-items: center;
   gap: 10px;
+  flex: 1 1 100%;
+  margin-bottom: 8px;
 }
 
-.item-image {
-  width: 60px;
-  height: 60px;
+.food-image {
+  width: 50px;
+  height: 50px;
+  border-radius: 6px;
   object-fit: cover;
-  border-radius: 8px;
+  border: 1px solid #ddd;
 }
 
 .modify-actions {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
+  gap: 10px;
 }
 
 .modify-btn {
@@ -52,86 +57,75 @@
   font-weight: bold;
 }
 
-.cart-totals-container {
-  border-top: 1px solid #ddd;
-  padding-top: 1rem;
-}
-
-.cart-totals-title {
-  font-size: 1.4rem;
-  margin-bottom: 1rem;
-}
-
+/* Promo Section */
 .promo-code-section {
+  margin: 16px 0;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-}
-
-.promo-code-label {
-  font-weight: 500;
+  gap: 10px;
 }
 
 .promo-code-input {
-  padding: 0.5rem;
-  font-size: 1rem;
+  padding: 8px;
+  font-size: 14px;
   width: 100%;
-  max-width: 250px;
+  box-sizing: border-box;
+  border: 1px solid #aaa;
+  border-radius: 4px;
 }
 
 .apply-promo-btn,
-.remove-promo-btn,
-.checkout-btn {
-  padding: 0.6rem 1rem;
-  background-color: #28a745;
+.remove-promo-btn {
+  padding: 8px;
+  font-size: 14px;
   border: none;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-  margin-top: 0.5rem;
+  background-color: #007bff;
+  color: #fff;
   border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
 }
 
 .remove-promo-btn {
   background-color: #dc3545;
 }
 
-.checkout-btn:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-
 .promo-error {
   color: red;
-  font-size: 0.9rem;
+  font-size: 13px;
 }
 
 .promo-success {
   color: green;
-  font-size: 0.9rem;
+  font-size: 13px;
 }
 
-.cart-totals-details {
-  margin-top: 1rem;
+/* Totals */
+.cart-totals-container {
+  margin-top: 24px;
+  border-top: 1px solid #ccc;
+  padding-top: 16px;
+}
+
+.cart-totals-title {
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+
+.cart-totals {
   display: flex;
   flex-direction: column;
-  gap: 0.7rem;
+  gap: 10px;
 }
 
 .cart-totals-item {
   display: flex;
   justify-content: space-between;
-  font-size: 1rem;
+  font-size: 14px;
 }
 
 .discount-item {
-  color: #dc3545;
-}
-
-.grand-total {
-  font-weight: bold;
-  font-size: 1.1rem;
+  color: #28a745;
 }
 
 .free-shipping {
@@ -139,41 +133,69 @@
   font-weight: bold;
 }
 
-@media (max-width: 400px) {
-  .cart {
-    padding: 0.5rem;
+.grand-total {
+  font-weight: bold;
+  font-size: 16px;
+  border-top: 1px solid #ddd;
+  padding-top: 10px;
+}
+
+.checkout-btn {
+  margin-top: 16px;
+  padding: 12px;
+  font-size: 16px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  width: 100%;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.checkout-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+@media screen and (max-width: 400px) {
+  .cart-items-title {
+    display: none;
   }
 
-  .cart-table {
-    font-size: 0.9rem;
+  .cart-items-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
   }
 
-  .item-image {
-    width: 45px;
-    height: 45px;
+  .cart-item-info {
+    flex-direction: row;
+    align-items: center;
   }
 
-  .promo-code-input {
-    font-size: 0.9rem;
-    max-width: 100%;
+  .food-image {
+    width: 60px;
+    height: 60px;
   }
 
-  .apply-promo-btn,
-  .remove-promo-btn,
-  .checkout-btn {
-    font-size: 0.9rem;
-    padding: 0.5rem;
+  .modify-actions {
+    justify-content: flex-start;
+    gap: 12px;
   }
 
   .cart-totals-title {
-    font-size: 1.2rem;
+    font-size: 16px;
   }
 
-  .cart-totals-item {
-    font-size: 0.95rem;
+  .promo-code-input,
+  .apply-promo-btn,
+  .remove-promo-btn {
+    font-size: 14px;
+    padding: 10px;
   }
 
-  .grand-total {
-    font-size: 1rem;
+  .checkout-btn {
+    font-size: 15px;
+    padding: 14px;
   }
 }
