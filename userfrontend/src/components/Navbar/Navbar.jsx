@@ -70,13 +70,12 @@ const Navbar = ({ setShowLogin,setShowOnlyFooter }) => {
       </ul>
 
       <div className="navbar-right">
-        <div className="navbar-basket-icon">
-          <Link to='/cart'>
-            <img src={assets.basket_icon} alt="Basket" />
-          </Link>
-          {(token && getTotalCartAmount() !== 0) && <div className="dot"></div>}
-        </div>
-
+      <div className="navbar-basket-icon">
+        <Link to='/cart'>
+         <img src={assets.basket_icon} alt="Basket" />
+        </Link>
+      {token && Object.values(cartItems).some(qty => qty > 0) && <div className="dot"></div>}
+      </div>
         {!token ? (
           <button onClick={() => setShowLogin(true)}>Sign in</button>
         ) : (
