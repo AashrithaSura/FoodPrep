@@ -80,15 +80,10 @@ const Cart = () => {
                 if (cartItems[food._id] > 0) {
                     return (
                         <div className="cart-items-item" key={food._id}>
-                            <img
-                                src={`https://foodprepbackend-53br.onrender.com/uploads/${food.image}`}
-                                alt={food.name}
-                                className="food-image"
-                                onError={(e) => {
-                                    e.target.onerror = null;
-                                    e.target.src = assets.placeholder_image;
-                                }}
-                            />
+                        <img src={food.image} alt={food.name} onError={(e) => {e.target.onerror = null;
+                        e.target.src = assets.placeholder_image;
+                        }}
+                        />
                             <p>{food.name}</p>
                             <p>₹{food.price}</p>
                             <p>{cartItems[food._id]}</p>
