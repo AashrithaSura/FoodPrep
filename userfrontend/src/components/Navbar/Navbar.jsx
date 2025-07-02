@@ -4,9 +4,9 @@ import { assets } from '../../assets/assets';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { StoreContext } from '../../context/StoreContext';
 
-const Navbar = ({ setShowOnlyFooter }) => {
+const Navbar = ({ setShowLogin,setShowOnlyFooter }) => {
   const [menu, setMenu] = useState('home');
-  const { getTotalCartAmount,setCartItems, token, setToken,setShowLogin } = useContext(StoreContext);
+  const { getTotalCartAmount, token, setToken } = useContext(StoreContext);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -14,8 +14,6 @@ const Navbar = ({ setShowOnlyFooter }) => {
     localStorage.removeItem('token');
     setToken('');
     navigate('/');
-    setCartItems({})
-
   };
 
   const handleHomeClick = () => {
