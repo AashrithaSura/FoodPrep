@@ -11,7 +11,6 @@ foodRouter.post('/add', upload.single('image'), addFood);
 foodRouter.get('/list', listFood);
 foodRouter.delete('/:id', removeFood);
 
-// ✅ new route to update admin rating
 const Food = require('../models/foodModel');
 
 foodRouter.put('/admin-rating/:id', async (req, res) => {

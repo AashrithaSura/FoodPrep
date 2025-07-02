@@ -3,8 +3,22 @@ const { cloudinary } = require('../config/cloudinary');
 
 const addFood = async (req, res) => {
   try {
-    if (!req.file) {
-      return res.status(400).json({ success: false, message: 'Image is required' });
+    let imagePath = null;
+    let publicId = null;
+
+    if (req.file) {
+      imagePath = req.file.path;
+      publicId = req.file.filename;
+    }
+
+    
+    if (req.body.imageUrl) {
+      imagePath = req.body.imageUrl;
+      publicId = null; 
+    }
+
+    if (!imagePath) {
+      return res.status(400).json({ success: false, message: 'Image is required (file or URL)' });
     }
 
     const food = await foodModel.create({
@@ -12,8 +26,8 @@ const addFood = async (req, res) => {
       description: req.body.description,
       price: req.body.price,
       category: req.body.category,
-      image: req.file.path, 
-      public_id: req.file.filename 
+      image: imagePath,
+      public_id: publicId
     });
 
     res.status(201).json({ 
@@ -31,6 +45,7 @@ const addFood = async (req, res) => {
     });
   }
 };
+
 
 const listFood = async (req, res) => {
   try {

@@ -7,12 +7,11 @@ import axios from 'axios';
 
 const FoodCard = ({ _id, name, price, description, image, adminRating }) => {
   const { addToCart, userId, url } = useContext(StoreContext);
-  const [rating, setRating] = useState(adminRating || 0); // Start with adminRating
+  const [rating, setRating] = useState(adminRating || 0);
   const [isAdded, setIsAdded] = useState(false);
   const [showFullDesc, setShowFullDesc] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
-  // Detect device type
   useEffect(() => {
     const checkIfMobile = () => {
       setIsMobile(window.innerWidth <= 768);
@@ -22,11 +21,10 @@ const FoodCard = ({ _id, name, price, description, image, adminRating }) => {
     return () => window.removeEventListener('resize', checkIfMobile);
   }, []);
 
-  // Load user's rating from backend if logged in
   useEffect(() => {
     if (!userId) return;
 
-    axios.get(`${url}/rating/user/${userId}`)
+    axios.get(`${url}/api/rating/user/${userId}`)
       .then(res => {
         const userRating = res.data.ratings.find(r => r.foodId === _id);
         if (userRating) setRating(userRating.rating);
@@ -40,9 +38,9 @@ const FoodCard = ({ _id, name, price, description, image, adminRating }) => {
       return;
     }
 
-    setRating(val); // Optimistic UI
+    setRating(val); 
 
-    axios.post(`${url}/rating`, {
+    axios.post(`${url}/api/rating`, {
       userId,
       foodId: _id,
       rating: val

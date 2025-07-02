@@ -96,7 +96,7 @@ const FoodDisplay = ({ category }) => {
                     price={item.price}
                     image={item.image}
                     description={item.description}
-                    adminRating={item.adminRating} // ✅ supports admin rating
+                    adminRating={item.adminRating} 
                     loading="lazy"
                   />
                 </div>
