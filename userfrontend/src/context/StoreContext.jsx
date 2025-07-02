@@ -4,14 +4,21 @@ import { jwtDecode } from "jwt-decode";
 
 export const StoreContext = createContext();
 
-const StoreContextProvider = ({ children, setShowLogin, setToken  }) => {
+const StoreContextProvider = ({ children, setShowLogin: externalSetShowLogin, setToken: externalSetToken }) => {
   const url = "https://foodprepbackend-53br.onrender.com";
 
   const [cartItems, setCartItems] = useState({});
   const [food_list, setFoodList] = useState([]);
-  const [token, setToken] = useState(localStorage.getItem("token") || null);
+  const [localToken, setLocalToken] = useState(localStorage.getItem("token") || null);
   const [userId, setUserId] = useState(null);
-  const [showLogin, setShowLogin] = useState(false); 
+  const [localShowLogin, setLocalShowLogin] = useState(false);
+
+  // Use external props if provided, else use local state
+  const token = externalSetToken ? localToken : localToken;
+  const setToken = externalSetToken || setLocalToken;
+
+  const showLogin = externalSetShowLogin ? localShowLogin : localShowLogin;
+  const setShowLogin = externalSetShowLogin || setLocalShowLogin;
 
   const fetchFoodList = async () => {
     try {
@@ -54,7 +61,7 @@ const StoreContextProvider = ({ children, setShowLogin, setToken  }) => {
 
   const addToCart = async (itemId) => {
     if (!token) {
-      setShowLogin(true); 
+      setShowLogin(true);
       return;
     }
 
@@ -72,7 +79,7 @@ const StoreContextProvider = ({ children, setShowLogin, setToken  }) => {
 
   const removeFromCart = async (itemId) => {
     if (!token) {
-      setShowLogin(true); 
+      setShowLogin(true);
       return;
     }
 
