@@ -9,7 +9,7 @@ import LoginPopup from "./components/LoginPopup/LoginPopup";
 import Profile from "./components/Profile/Profile";
 import ProfileSaved from "./components/ProfileSaved/ProfileSaved";
 import Settings from "./components/Settings/Settings";
-import StoreContextProvider from "./context/StoreContext";
+import { StoreContext } from "../../context/StoreContext";
 
 import Home from "./screens/Home/Home";
 import Cart from "./screens/Cart/Cart";
