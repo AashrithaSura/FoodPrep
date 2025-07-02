@@ -77,27 +77,24 @@ const Cart = () => {
         <p>Items</p> <p>Title</p> <p>Price</p> <p>Quantity</p> <p>Total</p> <p>Modify</p>
       </div>
       <br /> <hr />
-
       {food_list.map((food) => {
-        if (cartItems[food._id] > 0) {
-          return (
-            <div className="cart-items-item" key={food._id}>
-              <div className="cart-item-info">
-                <img
-                  src={food.image}
-                  alt={food.name}
-                  className="food-image"
-                  onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src = assets.placeholder_image;
-                  }}
-                />
-                <p className="food-title">{food.name}</p>
-              </div>
-              <p>₹{food.price}</p>
-              <p>{cartItems[food._id]}</p>
-              <p>₹{(cartItems[food._id] * food.price).toFixed(2)}</p>
-              <div className="modify-actions">
+    if (cartItems[food._id] > 0) {
+    return (
+      <div className="cart-items-item" key={food._id}>
+        <img
+          src={food.image}
+          alt={food.name}
+          className="food-image"
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src = assets.placeholder_image;
+          }}
+        />
+        <p className="food-title">{food.name}</p>
+        <p className="food-price">₹{food.price}</p>
+        <p className="food-quantity">{cartItems[food._id]}</p>
+        <p className="food-total">₹{(cartItems[food._id] * food.price).toFixed(2)}</p>
+        <div className="modify-actions">
                 <button
                   onClick={() => removeFromCart(food._id)}
                   className="modify-btn remove-btn"
@@ -111,13 +108,14 @@ const Cart = () => {
                 >
                   <img src={assets.add_icon_green} alt="Add" />
                 </button>
-              </div>
-            </div>
-          );
-        }
-        return null;
-      })}
 
+          </div>
+       </div>
+     );
+   }
+  return null;
+})}
+       
       <div className="cart-totals-container">
         <h2 className="cart-totals-title">Cart Totals</h2>
 
