@@ -12,7 +12,7 @@ const StoreContextProvider = ({ children, setShowLogin }) => {
   const [token, setToken] = useState(localStorage.getItem("token") || null);
   const [userId, setUserId] = useState(null);
 
-  // Fetch all foods
+
   const fetchFoodList = async () => {
     try {
       const res = await axios.get(`${url}/api/food/list`);

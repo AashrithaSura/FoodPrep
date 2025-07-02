@@ -66,23 +66,16 @@
 .navbar-basket-icon {
   position: relative;
 }
-.navbar-basket-icon img {
-  width: 32px;
-  height: 32px;
-  opacity: 0.8;
-  transition: opacity 0.3s;
-}
-.navbar-basket-icon:hover img {
-  opacity: 1;
-}
-.dot {
+.navbar-basket-icon .dot {
   position: absolute;
-  width: 12px;
-  height: 12px;
-  background-color: #ff4d4d;
-  border-radius: 50%;
   top: -4px;
   right: -4px;
+  width: 10px;
+  height: 10px;
+  background-color: #ff4d4d;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 2px rgba(255, 77, 77, 0.3);
 }
 
 .navbar-right button {
