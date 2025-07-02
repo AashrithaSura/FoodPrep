@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+// src/App.jsx
+import { useContext, useEffect, useState } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -9,7 +10,7 @@ import LoginPopup from "./components/LoginPopup/LoginPopup";
 import Profile from "./components/Profile/Profile";
 import ProfileSaved from "./components/ProfileSaved/ProfileSaved";
 import Settings from "./components/Settings/Settings";
-import StoreContextProvider from "./context/StoreContext";
+import StoreContextProvider, { StoreContext } from "./context/StoreContext";
 
 import Home from "./screens/Home/Home";
 import Cart from "./screens/Cart/Cart";
@@ -18,11 +19,10 @@ import MyOrders from "./screens/MyOrders/MyOrders";
 import Verify from "./screens/Verify/Verify";
 import ExploreMenu from "./components/ExploreMenu/ExploreMenu";
 
-const App = () => {
-  const [showLogin, setShowLogin] = useState(false);
-  const [showOnlyFooter, setShowOnlyFooter] = useState(false);
-  const [token, setToken] = useState(localStorage.getItem("token"));
+const AppContent = () => {
   const location = useLocation();
+  const { showLogin, setShowLogin, token } = useContext(StoreContext);
+  const [showOnlyFooter, setShowOnlyFooter] = useState(false);
 
   useEffect(() => {
     const firstVisit = localStorage.getItem("firstVisit");
@@ -34,13 +34,12 @@ const App = () => {
   }, [token, location.pathname]);
 
   return (
-    <StoreContextProvider setShowLogin={setShowLogin} setToken={setToken}>
+    <>
       {showLogin && <LoginPopup setShowLogin={setShowLogin} />}
       <ToastContainer position="top-right" autoClose={3000} theme="light" />
-      
+
       <div className="app">
         <Navbar setShowOnlyFooter={setShowOnlyFooter} />
-
         {showOnlyFooter ? (
           <div className="footer-only-view">
             <Footer />
@@ -49,10 +48,7 @@ const App = () => {
           <>
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route
-                path="/menu"
-                element={<ExploreMenu category="All" setCategory={() => {}} />}
-              />
+              <Route path="/menu" element={<ExploreMenu category="All" setCategory={() => {}} />} />
               <Route path="/cart" element={<Cart />} />
               <Route path="/placeorder" element={<PlaceOrder />} />
               <Route path="/verify" element={<Verify />} />
@@ -65,8 +61,14 @@ const App = () => {
           </>
         )}
       </div>
-    </StoreContextProvider>
+    </>
   );
 };
+
+const App = () => (
+  <StoreContextProvider>
+    <AppContent />
+  </StoreContextProvider>
+);
 
 export default App;

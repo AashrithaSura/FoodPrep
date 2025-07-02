@@ -1,25 +1,20 @@
+// src/context/StoreContext.jsx
 import { createContext, useState, useEffect } from "react";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 
 export const StoreContext = createContext();
 
-const StoreContextProvider = ({ children, setShowLogin: externalSetShowLogin, setToken: externalSetToken }) => {
+const StoreContextProvider = ({ children }) => {
   const url = "https://foodprepbackend-53br.onrender.com";
 
   const [cartItems, setCartItems] = useState({});
   const [food_list, setFoodList] = useState([]);
-  const [localToken, setLocalToken] = useState(localStorage.getItem("token") || null);
+  const [token, setToken] = useState(localStorage.getItem("token") || null);
   const [userId, setUserId] = useState(null);
-  const [localShowLogin, setLocalShowLogin] = useState(false);
+  const [showLogin, setShowLogin] = useState(false); 
 
-  // Use external props if provided, else use local state
-  const token = externalSetToken ? localToken : localToken;
-  const setToken = externalSetToken || setLocalToken;
-
-  const showLogin = externalSetShowLogin ? localShowLogin : localShowLogin;
-  const setShowLogin = externalSetShowLogin || setLocalShowLogin;
-
+ 
   const fetchFoodList = async () => {
     try {
       const res = await axios.get(`${url}/api/food/list`);
@@ -29,6 +24,7 @@ const StoreContextProvider = ({ children, setShowLogin: externalSetShowLogin, se
     }
   };
 
+  // Load cart data if token exists
   const loadCartData = async (token) => {
     try {
       const res = await axios.get(`${url}/api/cart/get`, {
@@ -61,15 +57,13 @@ const StoreContextProvider = ({ children, setShowLogin: externalSetShowLogin, se
 
   const addToCart = async (itemId) => {
     if (!token) {
-      setShowLogin(true);
+      setShowLogin(true); 
       return;
     }
 
     try {
       await axios.post(`${url}/api/cart/add`, { itemId }, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
       await loadCartData(token);
     } catch (err) {
@@ -85,9 +79,7 @@ const StoreContextProvider = ({ children, setShowLogin: externalSetShowLogin, se
 
     try {
       await axios.delete(`${url}/api/cart/remove`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
         params: { itemId },
       });
       await loadCartData(token);
@@ -97,14 +89,10 @@ const StoreContextProvider = ({ children, setShowLogin: externalSetShowLogin, se
   };
 
   const getTotalCartAmount = () => {
-    let total = 0;
-    for (const itemId in cartItems) {
+    return Object.entries(cartItems).reduce((total, [itemId, qty]) => {
       const foodItem = food_list.find((item) => item._id === itemId);
-      if (foodItem) {
-        total += foodItem.price * cartItems[itemId];
-      }
-    }
-    return total;
+      return foodItem ? total + foodItem.price * qty : total;
+    }, 0);
   };
 
   const contextValue = {
