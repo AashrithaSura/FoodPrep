@@ -77,10 +77,22 @@ const Cart = () => {
       </div>
       <br /> <hr />
 
-      {food_list.map((food) => {
-        if (cartItems[food._id] > 0) {
-          return (
-            <div className="cart-items-item" key={food._id}>
+      <table className="cart-table">
+  <thead>
+    <tr>
+      <th>Item</th>
+      <th>Price</th>
+      <th>Quantity</th>
+      <th>Total</th>
+      <th>Modify</th>
+    </tr>
+  </thead>
+  <tbody>
+    {food_list.map((food) => {
+      if (cartItems[food._id] > 0) {
+        return (
+          <tr key={food._id}>
+            <td>
               <div className="cart-item-image-title">
                 <img
                   src={food.image}
@@ -91,31 +103,31 @@ const Cart = () => {
                     e.target.src = assets.placeholder_image;
                   }}
                 />
-                <p>{food.name}</p>
+                <span>{food.name}</span>
               </div>
-              <p>₹{food.price}</p>
-              <p>{cartItems[food._id]}</p>
-              <p>₹{(cartItems[food._id] * food.price).toFixed(2)}</p>
+            </td>
+            <td>₹{food.price}</td>
+            <td>{cartItems[food._id]}</td>
+            <td>₹{(cartItems[food._id] * food.price).toFixed(2)}</td>
+            <td>
               <div className="modify-actions">
-                <button
-                  onClick={() => removeFromCart(food._id)}
-                  className="modify-btn remove-btn"
-                >
+                <button onClick={() => removeFromCart(food._id)} className="modify-btn remove-btn">
                   <img src={assets.remove_icon_red} alt="Remove" />
                 </button>
                 <span className="quantity-display">{cartItems[food._id]}</span>
-                <button
-                  onClick={() => addToCart(food._id)}
-                  className="modify-btn add-btn"
-                >
+                <button onClick={() => addToCart(food._id)} className="modify-btn add-btn">
                   <img src={assets.add_icon_green} alt="Add" />
                 </button>
               </div>
-            </div>
-          );
-        }
-        return null;
-      })}
+            </td>
+          </tr>
+        );
+      }
+      return null;
+    })}
+  </tbody>
+</table>
+
 
       <div className="cart-totals-container">
         <h2 className="cart-totals-title">Cart Totals</h2>

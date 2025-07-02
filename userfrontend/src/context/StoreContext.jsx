@@ -4,7 +4,7 @@ import { jwtDecode } from "jwt-decode";
 
 export const StoreContext = createContext();
 
-const StoreContextProvider = ({ children }) => {
+const StoreContextProvider = ({ children, setShowLogin, setToken  }) => {
   const url = "https://foodprepbackend-53br.onrender.com";
 
   const [cartItems, setCartItems] = useState({});
