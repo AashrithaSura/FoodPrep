@@ -59,16 +59,17 @@ const FoodCard = ({ _id, name, price, description, image, adminRating }) => {
     <div className={`food-card ${isAdded ? 'added-effect' : ''}`}>
       <div className='food-item'>
         <div className="food-item-image-container">
-          <img 
+        <img 
             className='food-item-image' 
-            src={`https://foodprepbackend-53br.onrender.com/uploads/${image}`} 
+            src={image.startsWith('http') ? image : `${url}/uploads/${image}`}
             alt={name}
             onError={(e) => {
-              console.log('Failed to load image:', image);
-              e.target.onerror = null;
-              e.target.src = assets.placeholder_image;
-            }}
-          />
+            console.log('Failed to load image:', image);
+            e.target.onerror = null;
+            e.target.src = assets.placeholder_image;
+          }}
+         />
+
           {isAdded && (
             <div className="added-confirmation">
               <div className="stars-animation">
