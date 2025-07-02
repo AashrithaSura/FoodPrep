@@ -1,4 +1,4 @@
-import { useState, useEffect,useContext } from "react";
+import { useState, useEffect } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -9,7 +9,7 @@ import LoginPopup from "./components/LoginPopup/LoginPopup";
 import Profile from "./components/Profile/Profile";
 import ProfileSaved from "./components/ProfileSaved/ProfileSaved";
 import Settings from "./components/Settings/Settings";
-import { StoreContext } from "../../context/StoreContext";
+import StoreContextProvider from "./context/StoreContext";
 
 import Home from "./screens/Home/Home";
 import Cart from "./screens/Cart/Cart";
@@ -20,26 +20,29 @@ import ExploreMenu from "./components/ExploreMenu/ExploreMenu";
  
 
 const App = () => {
+  const [showLogin, setShowLogin] = useState(false);
   const [showOnlyFooter, setShowOnlyFooter] = useState(false);
   const [token, setToken] = useState(localStorage.getItem("token"));
-  const { showLogin } = useContext(StoreContext);
   const location = useLocation();
 
   useEffect(() => {
     const firstVisit = localStorage.getItem("firstVisit");
     if (!token && !firstVisit) {
+      setShowLogin(true);
       localStorage.setItem("firstVisit", "true");
     }
     setShowOnlyFooter(false);
   }, [token, location.pathname]);
 
   return (
-    <StoreContextProvider>
+    <StoreContextProvider setShowLogin={setShowLogin}>
       <ToastContainer position="top-right" autoClose={3000} theme="light" />
-      {showLogin && <LoginPopup />}
-      
+      {showLogin && (
+        <LoginPopup setShowLogin={setShowLogin} forceLogin={!token} />
+      )}
+
       <div className="app">
-        <Navbar setShowOnlyFooter={setShowOnlyFooter} />
+        <Navbar setShowLogin={setShowLogin} setShowOnlyFooter={setShowOnlyFooter} />
         
         {showOnlyFooter ? (
           <div className="footer-only-view">
@@ -57,6 +60,7 @@ const App = () => {
               <Route path="/profile" element={<Profile />} />
               <Route path="/profile-saved" element={<ProfileSaved />} />
               <Route path="/settings" element={<Settings />} />
+
             </Routes>
             {location.pathname === "/" && <Footer />}
           </>
@@ -65,4 +69,5 @@ const App = () => {
     </StoreContextProvider>
   );
 };
+
 export default App;
