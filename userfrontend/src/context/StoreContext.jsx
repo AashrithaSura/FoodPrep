@@ -1,15 +1,16 @@
 import { createContext, useState, useEffect } from "react";
 import axios from "axios";
-import { jwtDecode } from "jwt-decode";
+import { jwtDecode } from "jwt-decode"; 
 
 export const StoreContext = createContext();
 
-const StoreContextProvider = ({ children, setShowLogin }) => {
+const StoreContextProvider = ({ children }) => {
   const url = "https://foodprepbackend-53br.onrender.com";
   const [cartItems, setCartItems] = useState({});
   const [food_list, setFoodList] = useState([]);
   const [token, setToken] = useState(localStorage.getItem("token") || null);
   const [userId, setUserId] = useState(null);
+  const [showLogin, setShowLogin] = useState(false);
 
   const fetchFoodList = async () => {
     try {
@@ -20,6 +21,7 @@ const StoreContextProvider = ({ children, setShowLogin }) => {
     }
   };
 
+  // Load cart items from server
   const loadCartData = async (token) => {
     try {
       const res = await axios.post(`${url}/api/cart/get`, {}, {
@@ -40,7 +42,7 @@ const StoreContextProvider = ({ children, setShowLogin }) => {
         setToken(tokenFromStorage);
         try {
           const decoded = jwtDecode(tokenFromStorage);
-          setUserId(decoded.id || decoded._id);
+          setUserId(decoded.id || decoded._id); 
         } catch (err) {
           console.error("Token decode failed", err);
           setUserId(null);
@@ -57,9 +59,10 @@ const StoreContextProvider = ({ children, setShowLogin }) => {
     loadData();
   }, []);
 
+  // Add to cart
   const addToCart = async (itemId) => {
     if (!token) {
-      setShowLogin(true); // 👈 Show login popup
+      setShowLogin(true);
       return;
     }
 
@@ -73,16 +76,16 @@ const StoreContextProvider = ({ children, setShowLogin }) => {
     }
   };
 
+  // Remove from cart
   const removeFromCart = async (itemId) => {
     if (!token) {
-      setShowLogin(true); // 👈 Show login popup
+      alert("Please login to remove from cart");
       return;
     }
 
     try {
-      const res = await axios.delete(`${url}/api/cart/remove`, {
+      const res = await axios.delete(`${url}/api/cart/remove`, { itemId }, {
         headers: { Authorization: `Bearer ${token}` },
-        data: { itemId }, // 👈 needed because DELETE doesn't accept body normally
       });
       setCartItems(res.data.cartItems);
     } catch (err) {
@@ -111,9 +114,10 @@ const StoreContextProvider = ({ children, setShowLogin }) => {
     url,
     token,
     setToken,
-    userId,
+    userId,        
     setUserId,
-    setShowLogin, // 👈 Provide access to popup control
+    showLogin,
+    setShowLogin
   };
 
   return (
