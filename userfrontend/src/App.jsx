@@ -65,4 +65,4 @@ const App = () => {
     </StoreContextProvider>
   );
 };
-          
+export default App;
