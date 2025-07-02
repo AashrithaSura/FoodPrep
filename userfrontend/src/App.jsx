@@ -17,7 +17,6 @@ import PlaceOrder from "./screens/PlaceOrder/PlaceOrder";
 import MyOrders from "./screens/MyOrders/MyOrders";
 import Verify from "./screens/Verify/Verify";
 import ExploreMenu from "./components/ExploreMenu/ExploreMenu";
- 
 
 const App = () => {
   const [showLogin, setShowLogin] = useState(false);
@@ -37,13 +36,17 @@ const App = () => {
   return (
     <StoreContextProvider setShowLogin={setShowLogin}>
       <ToastContainer position="top-right" autoClose={3000} theme="light" />
+      
       {showLogin && (
         <LoginPopup setShowLogin={setShowLogin} forceLogin={!token} />
       )}
 
       <div className="app">
-        <Navbar setShowLogin={setShowLogin} setShowOnlyFooter={setShowOnlyFooter} />
-        
+        <Navbar
+          setShowLogin={setShowLogin}
+          setShowOnlyFooter={setShowOnlyFooter}
+        />
+
         {showOnlyFooter ? (
           <div className="footer-only-view">
             <Footer />
@@ -52,7 +55,10 @@ const App = () => {
           <>
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/menu" element={<ExploreMenu category="All" setCategory={() => {}} />} />
+              <Route
+                path="/menu"
+                element={<ExploreMenu category="All" setCategory={() => {}} />}
+              />
               <Route path="/cart" element={<Cart />} />
               <Route path="/placeorder" element={<PlaceOrder />} />
               <Route path="/verify" element={<Verify />} />
@@ -60,7 +66,6 @@ const App = () => {
               <Route path="/profile" element={<Profile />} />
               <Route path="/profile-saved" element={<ProfileSaved />} />
               <Route path="/settings" element={<Settings />} />
-
             </Routes>
             {location.pathname === "/" && <Footer />}
           </>

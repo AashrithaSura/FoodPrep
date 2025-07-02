@@ -6,7 +6,15 @@ import axios from 'axios';
 import './Cart.css';
 
 const Cart = () => {
-  const { cartItems, food_list, removeFromCart, addToCart, url } = useContext(StoreContext);
+  const {
+    cartItems,
+    setCartItems,
+    food_list,
+    url,
+    token,
+    setShowLogin,
+  } = useContext(StoreContext);
+
   const [promoCode, setPromoCode] = useState('');
   const [appliedPromo, setAppliedPromo] = useState(null);
   const [promoError, setPromoError] = useState('');
@@ -29,8 +37,8 @@ const Cart = () => {
       const response = await axios.get(`${url}/api/promo/validate`, {
         params: {
           code: promoCode,
-          subtotal: calculatedTotalAmount
-        }
+          subtotal: calculatedTotalAmount,
+        },
       });
       setAppliedPromo(response.data.promo);
       setPromoError('');
@@ -67,7 +75,50 @@ const Cart = () => {
   const finalTotal = subtotalAfterDiscount + deliveryFee;
 
   const handleCheckout = () => {
+    if (!token) {
+      setShowLogin(true);
+      return;
+    }
     navigate('/placeorder', { state: { promo: appliedPromo } });
+  };
+
+  const handleAdd = async (itemId) => {
+    if (!token) return setShowLogin(true);
+
+    // Optimistically update UI
+    setCartItems((prev) => ({
+      ...prev,
+      [itemId]: (prev[itemId] || 0) + 1,
+    }));
+
+    try {
+      await axios.post(`${url}/api/cart/add`, { itemId }, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+    } catch (err) {
+      console.error('Add to cart failed:', err);
+    }
+  };
+
+  const handleRemove = async (itemId) => {
+    if (!token) return setShowLogin(true);
+
+    // Optimistically update UI
+    setCartItems((prev) => {
+      const updated = { ...prev };
+      if (updated[itemId] > 1) updated[itemId] -= 1;
+      else delete updated[itemId];
+      return updated;
+    });
+
+    try {
+      await axios.delete(`${url}/api/cart/remove`, {
+        headers: { Authorization: `Bearer ${token}` },
+        data: { itemId },
+      });
+    } catch (err) {
+      console.error('Remove from cart failed:', err);
+    }
   };
 
   return (
@@ -78,56 +129,55 @@ const Cart = () => {
       <br /> <hr />
 
       <table className="cart-table">
-  <thead>
-    <tr>
-      <th>Item</th>
-      <th>Price</th>
-      <th>Quantity</th>
-      <th>Total</th>
-      <th>Modify</th>
-    </tr>
-  </thead>
-  <tbody>
-    {food_list.map((food) => {
-      if (cartItems[food._id] > 0) {
-        return (
-          <tr key={food._id}>
-            <td>
-              <div className="cart-item-image-title">
-                <img
-                  src={food.image}
-                  alt={food.name}
-                  className="item-image"
-                  onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src = assets.placeholder_image;
-                  }}
-                />
-                <span>{food.name}</span>
-              </div>
-            </td>
-            <td>₹{food.price}</td>
-            <td>{cartItems[food._id]}</td>
-            <td>₹{(cartItems[food._id] * food.price).toFixed(2)}</td>
-            <td>
-              <div className="modify-actions">
-                <button onClick={() => removeFromCart(food._id)} className="modify-btn remove-btn">
-                  <img src={assets.remove_icon_red} alt="Remove" />
-                </button>
-                <span className="quantity-display">{cartItems[food._id]}</span>
-                <button onClick={() => addToCart(food._id)} className="modify-btn add-btn">
-                  <img src={assets.add_icon_green} alt="Add" />
-                </button>
-              </div>
-            </td>
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Total</th>
+            <th>Modify</th>
           </tr>
-        );
-      }
-      return null;
-    })}
-  </tbody>
-</table>
-
+        </thead>
+        <tbody>
+          {food_list.map((food) => {
+            if (cartItems[food._id] > 0) {
+              return (
+                <tr key={food._id}>
+                  <td>
+                    <div className="cart-item-image-title">
+                      <img
+                        src={food.image}
+                        alt={food.name}
+                        className="item-image"
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = assets.placeholder_image;
+                        }}
+                      />
+                      <span>{food.name}</span>
+                    </div>
+                  </td>
+                  <td>₹{food.price}</td>
+                  <td>{cartItems[food._id]}</td>
+                  <td>₹{(cartItems[food._id] * food.price).toFixed(2)}</td>
+                  <td>
+                    <div className="modify-actions">
+                      <button onClick={() => handleRemove(food._id)} className="modify-btn remove-btn">
+                        <img src={assets.remove_icon_red} alt="Remove" />
+                      </button>
+                      <span className="quantity-display">{cartItems[food._id]}</span>
+                      <button onClick={() => handleAdd(food._id)} className="modify-btn add-btn">
+                        <img src={assets.add_icon_green} alt="Add" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              );
+            }
+            return null;
+          })}
+        </tbody>
+      </table>
 
       <div className="cart-totals-container">
         <h2 className="cart-totals-title">Cart Totals</h2>

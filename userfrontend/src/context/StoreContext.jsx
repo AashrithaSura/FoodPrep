@@ -1,38 +1,31 @@
-// src/context/StoreContext.jsx
 import { createContext, useState, useEffect } from "react";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 
 export const StoreContext = createContext();
 
-const StoreContextProvider = ({ children }) => {
+const StoreContextProvider = ({ children, setShowLogin }) => {
   const url = "https://foodprepbackend-53br.onrender.com";
-
   const [cartItems, setCartItems] = useState({});
   const [food_list, setFoodList] = useState([]);
   const [token, setToken] = useState(localStorage.getItem("token") || null);
   const [userId, setUserId] = useState(null);
-  const [showLogin, setShowLogin] = useState(false); 
 
- 
   const fetchFoodList = async () => {
     try {
       const res = await axios.get(`${url}/api/food/list`);
-      setFoodList(res.data.data);
+      setFoodList(res.data);
     } catch (err) {
       console.error("Error fetching food list:", err.response?.data || err.message);
     }
   };
 
-  // Load cart data if token exists
   const loadCartData = async (token) => {
     try {
-      const res = await axios.get(`${url}/api/cart/get`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+      const res = await axios.post(`${url}/api/cart/get`, {}, {
+        headers: { Authorization: `Bearer ${token}` },
       });
-      setCartItems(res.data.cartData || {});
+      setCartItems(res.data.cartItems || {});
     } catch (err) {
       console.error("Error loading cart:", err.response?.data || err.message);
     }
@@ -41,31 +34,40 @@ const StoreContextProvider = ({ children }) => {
   useEffect(() => {
     const loadData = async () => {
       await fetchFoodList();
-      if (token) {
+      const tokenFromStorage = localStorage.getItem("token");
+
+      if (tokenFromStorage) {
+        setToken(tokenFromStorage);
         try {
-          const decoded = jwtDecode(token);
+          const decoded = jwtDecode(tokenFromStorage);
           setUserId(decoded.id || decoded._id);
-          await loadCartData(token);
         } catch (err) {
-          console.error("Invalid token:", err);
+          console.error("Token decode failed", err);
           setUserId(null);
+        }
+
+        loadCartData(tokenFromStorage);
+      } else {
+        const localCart = localStorage.getItem("cartItems");
+        if (localCart) {
+          setCartItems(JSON.parse(localCart));
         }
       }
     };
     loadData();
-  }, [token]);
+  }, []);
 
   const addToCart = async (itemId) => {
     if (!token) {
-      setShowLogin(true); 
+      setShowLogin(true); // 👈 Show login popup
       return;
     }
 
     try {
-      await axios.post(`${url}/api/cart/add`, { itemId }, {
+      const res = await axios.post(`${url}/api/cart/add`, { itemId }, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      await loadCartData(token);
+      setCartItems(res.data.cartItems);
     } catch (err) {
       console.error("Add to cart failed:", err.response?.data || err.message);
     }
@@ -73,26 +75,30 @@ const StoreContextProvider = ({ children }) => {
 
   const removeFromCart = async (itemId) => {
     if (!token) {
-      setShowLogin(true);
+      setShowLogin(true); // 👈 Show login popup
       return;
     }
 
     try {
-      await axios.delete(`${url}/api/cart/remove`, {
+      const res = await axios.delete(`${url}/api/cart/remove`, {
         headers: { Authorization: `Bearer ${token}` },
-        params: { itemId },
+        data: { itemId }, // 👈 needed because DELETE doesn't accept body normally
       });
-      await loadCartData(token);
+      setCartItems(res.data.cartItems);
     } catch (err) {
       console.error("Remove from cart failed:", err.response?.data || err.message);
     }
   };
 
   const getTotalCartAmount = () => {
-    return Object.entries(cartItems).reduce((total, [itemId, qty]) => {
+    let total = 0;
+    for (const itemId in cartItems) {
       const foodItem = food_list.find((item) => item._id === itemId);
-      return foodItem ? total + foodItem.price * qty : total;
-    }, 0);
+      if (foodItem) {
+        total += foodItem.price * cartItems[itemId];
+      }
+    }
+    return total;
   };
 
   const contextValue = {
@@ -107,8 +113,7 @@ const StoreContextProvider = ({ children }) => {
     setToken,
     userId,
     setUserId,
-    showLogin,
-    setShowLogin,
+    setShowLogin, // 👈 Provide access to popup control
   };
 
   return (
