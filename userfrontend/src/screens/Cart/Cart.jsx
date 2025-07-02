@@ -81,7 +81,11 @@ const Cart = () => {
                     return (
                         <div className="cart-items-item" key={food._id}>
                             <img
+<<<<<<< HEAD
                                 src={`https://foodprepbackend-53br.onrender.com/uploads/${food.image}`}
+=======
+                                src={food.image}
+>>>>>>> 980b7a0d7d30189f475b2fb1c45a83442f4897b3
                                 alt={food.name}
                                 className="food-image"
                                 onError={(e) => {
@@ -89,6 +93,12 @@ const Cart = () => {
                                     e.target.src = assets.placeholder_image;
                                 }}
                             />
+<<<<<<< HEAD
+=======
+                            <div className="cart-item-info">
+                         </div>
+
+>>>>>>> 980b7a0d7d30189f475b2fb1c45a83442f4897b3
                             <p>{food.name}</p>
                             <p>₹{food.price}</p>
                             <p>{cartItems[food._id]}</p>
