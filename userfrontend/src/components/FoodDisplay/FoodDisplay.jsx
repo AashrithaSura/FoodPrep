@@ -1,3 +1,4 @@
+
 import { useContext, useState, useEffect, useRef, useMemo } from 'react';
 import { StoreContext } from '../../context/StoreContext';
 import FoodCard from '../FoodCard/FoodCard';
@@ -10,6 +11,7 @@ const FoodDisplay = ({ category }) => {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [currentCategory, setCurrentCategory] = useState(category);
   const [scrollPosition, setScrollPosition] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
   const containerRef = useRef(null);
 
   const filteredItems = useMemo(() => {
@@ -21,6 +23,8 @@ const FoodDisplay = ({ category }) => {
       setIsLoading(true);
       return;
     }
+
+    setIsLoading(false);
 
     if (currentCategory !== category) {
       setIsTransitioning(true);
@@ -60,6 +64,8 @@ const FoodDisplay = ({ category }) => {
     }
   };
 
+  if (isLoading) return <div className="loading-spinner">Loading...</div>;
+
   return (
     <div className={`food-display ${isTransitioning ? 'flip-transition' : ''}`}>
       <h2 className="display-title">
@@ -91,7 +97,8 @@ const FoodDisplay = ({ category }) => {
                     price={item.price}
                     image={item.image}
                     description={item.description}
-                    adminRating={item.adminRating} 
+                    adminRating={item.adminRating} // ✅ supports admin rating
+                    loading="lazy"
                   />
                 </div>
               ))}
