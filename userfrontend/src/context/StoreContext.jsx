@@ -88,7 +88,7 @@ const StoreContextProvider = ({ children, setShowLogin }) => {
     }
 
     try {
-      const res = await axios.post(`${url}/api/cart/remove`, { itemId }, {
+      const res = await axios.delete(`${url}/api/cart/remove`, { itemId }, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setCartItems(res.data.cartItems);

@@ -12,9 +12,8 @@ const Cart = () => {
   const [promoError, setPromoError] = useState('');
   const navigate = useNavigate();
 
-  const calculatedTotalAmount = Object.entries(cartItems).reduce((acc, [foodId, quantity]) => {
-    const food = food_list.find(f => f._id === foodId);
-    if (!food) return acc;
+  const calculatedTotalAmount = food_list.reduce((acc, food) => {
+    const quantity = cartItems[food._id] || 0;
     return acc + quantity * food.price;
   }, 0);
 
@@ -30,8 +29,8 @@ const Cart = () => {
       const response = await axios.get(`${url}/api/promo/validate`, {
         params: {
           code: promoCode,
-          subtotal: calculatedTotalAmount,
-        },
+          subtotal: calculatedTotalAmount
+        }
       });
       setAppliedPromo(response.data.promo);
       setPromoError('');
@@ -74,7 +73,7 @@ const Cart = () => {
   return (
     <div className="cart">
       <div className="cart-items-title">
-        <p>Items</p> <p>Title</p> <p>Price</p> <p>Quantity</p> <p>Total</p> <p>Modify</p>
+        <p>Item</p> <p>Price</p> <p>Quantity</p> <p>Total</p> <p>Modify</p>
       </div>
       <br /> <hr />
 
@@ -82,11 +81,11 @@ const Cart = () => {
         if (cartItems[food._id] > 0) {
           return (
             <div className="cart-items-item" key={food._id}>
-              <div className="cart-item-info">
+              <div className="cart-item-image-title">
                 <img
                   src={food.image}
                   alt={food.name}
-                  className="food-image"
+                  className="item-image"
                   onError={(e) => {
                     e.target.onerror = null;
                     e.target.src = assets.placeholder_image;
@@ -178,6 +177,7 @@ const Cart = () => {
               <p>₹{finalTotal.toFixed(2)}</p>
             </div>
           </div>
+
           <button
             className="checkout-btn"
             onClick={handleCheckout}
@@ -192,4 +192,3 @@ const Cart = () => {
 };
 
 export default Cart;
-
