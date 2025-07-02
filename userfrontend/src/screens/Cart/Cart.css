@@ -1,42 +1,31 @@
 .cart {
   padding: 20px;
-  max-width: 1000px;
-  margin: auto;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #333;
-  overflow-x: auto;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-/* Table styling */
+.cart-items-title {
+  display: none;
+}
+
 .cart-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 20px;
-  background: #fff;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-  min-width: 600px;
+  margin-bottom: 30px;
 }
 
-.cart-table thead {
-  background-color: #f5f5f5;
-  font-weight: bold;
-}
-
-.cart-table th,
+.cart-table th, 
 .cart-table td {
-  padding: 12px 10px;
-  text-align: center;
-  border-bottom: 1px solid #e0e0e0;
-  font-size: 15px;
-}
-
-.cart-table td:first-child {
+  padding: 12px;
   text-align: left;
+  border-bottom: 1px solid #e1e1e1;
 }
 
-/* Item image and title */
+.cart-table th {
+  font-weight: 600;
+  background-color: #f9f9f9;
+}
+
 .cart-item-image-title {
   display: flex;
   align-items: center;
@@ -47,21 +36,23 @@
   width: 50px;
   height: 50px;
   object-fit: cover;
-  border-radius: 6px;
+  border-radius: 8px;
 }
 
-/* Modify quantity buttons */
 .modify-actions {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
+  gap: 10px;
 }
 
 .modify-btn {
-  border: none;
   background: none;
+  border: none;
   cursor: pointer;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .modify-btn img {
@@ -70,175 +61,220 @@
 }
 
 .quantity-display {
-  font-weight: bold;
   min-width: 20px;
   text-align: center;
 }
 
-/* Totals box */
 .cart-totals-container {
   margin-top: 30px;
-  background: #fff;
+  background: #f9f9f9;
   padding: 20px;
   border-radius: 10px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .cart-totals-title {
-  font-size: 22px;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
 }
 
-/* Promo Code */
 .promo-code-section {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
   margin-bottom: 15px;
-  align-items: center;
 }
 
 .promo-code-label {
-  width: 100%;
-  font-size: 14px;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
 }
 
 .promo-code-input {
-  flex: 1;
-  min-width: 150px;
-  padding: 8px;
-  font-size: 14px;
+  padding: 10px;
+  border: 1px solid #ddd;
   border-radius: 4px;
-  border: 1px solid #ccc;
+  width: 100%;
+  max-width: 300px;
+  margin-right: 10px;
 }
 
-.apply-promo-btn,
+.apply-promo-btn, 
 .remove-promo-btn {
-  padding: 8px 12px;
-  font-size: 14px;
+  padding: 10px 15px;
   border: none;
   border-radius: 4px;
-  background-color: #007bff;
-  color: white;
   cursor: pointer;
+  margin-top: 10px;
+}
+
+.apply-promo-btn {
+  background-color: #4CAF50;
+  color: white;
 }
 
 .remove-promo-btn {
-  background-color: #dc3545;
+  background-color: #f44336;
+  color: white;
 }
 
 .promo-error {
-  color: red;
+  color: #f44336;
   margin-top: 5px;
-  font-size: 13px;
 }
 
 .promo-success {
-  color: green;
-  margin-top: 5px;
-  font-size: 13px;
+  color: #4CAF50;
+  margin: 10px 0;
 }
 
-/* Totals breakdown */
+.cart-totals {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
 .cart-totals-details {
-  font-size: 16px;
+  margin-bottom: 20px;
 }
 
 .cart-totals-item {
   display: flex;
   justify-content: space-between;
-  margin: 8px 0;
+  margin-bottom: 10px;
 }
 
 .discount-item {
-  color: #28a745;
+  color: #4CAF50;
 }
 
 .free-shipping {
-  color: green;
+  color: #4CAF50;
   font-weight: bold;
 }
 
 .grand-total {
   font-weight: bold;
-  font-size: 18px;
+  font-size: 1.2rem;
   margin-top: 10px;
 }
 
-/* Checkout Button */
 .checkout-btn {
-  margin-top: 20px;
-  width: fit-content;
-  background-color: #28a745;
+  width: 100%;
+  padding: 15px;
+  background-color: #ff6b6b;
   color: white;
-  padding: 12px;
-  font-size: 16px;
   border: none;
-  border-radius: 6px;
+  border-radius: 4px;
+  font-size: 1rem;
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: background-color 0.3s;
 }
 
 .checkout-btn:hover {
-  background-color: #218838;
+  background-color: #ff5252;
 }
 
 .checkout-btn:disabled {
-  background-color: #ccc;
+  background-color: #cccccc;
   cursor: not-allowed;
 }
 
-/* Responsive for small screens */
-@media (max-width: 600px) {
-  .cart {
-    padding: 10px;
-  }
-
+/* Responsive styles */
+@media (max-width: 768px) {
   .cart-table {
-    min-width: 100%;
+    display: block;
+    overflow-x: auto;
   }
-
-  .cart-table th,
-  .cart-table td {
-    font-size: 13px;
-    padding: 8px 6px;
-  }
-
+  
   .cart-item-image-title {
     flex-direction: column;
     align-items: flex-start;
-    gap: 4px;
+    gap: 5px;
   }
-
+  
   .item-image {
     width: 40px;
     height: 40px;
   }
-
-  .modify-actions {
-    flex-wrap: wrap;
-    gap: 5px;
+  
+  .promo-code-input {
+    max-width: 100%;
+    margin-right: 0;
   }
+}
 
-  .promo-code-section {
-    flex-direction: column;
-    align-items: stretch;
+@media (max-width: 600px) {
+  .cart-table th,
+  .cart-table td {
+    padding: 8px;
+    font-size: 0.9rem;
   }
-
-  .checkout-btn {
-    width: 100%;
-    text-align: center;
-  }
-
-  .cart-totals-details {
-    font-size: 14px;
-  }
-
-  .cart-totals-title {
-    font-size: 18px;
-  }
-
+  
   .cart-totals-container {
     padding: 15px;
+  }
+  
+  .cart-totals-title {
+    font-size: 1.3rem;
+  }
+  
+  .checkout-btn {
+    padding: 12px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .cart {
+    padding: 10px;
+  }
+  
+  .cart-table th {
+    display: none;
+  }
+  
+  .cart-table tr {
+    display: block;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #ddd;
+  }
+  
+  .cart-table td {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 5px;
+    border: none;
+  }
+  
+  .cart-table td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    margin-right: 10px;
+  }
+  
+  .modify-actions {
+    justify-content: flex-end;
+  }
+  
+  .cart-totals-item {
+    font-size: 0.9rem;
+  }
+  
+  .grand-total {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .cart-table td {
+    font-size: 0.85rem;
+  }
+  
+  .promo-code-label {
+    font-size: 0.8rem;
+  }
+  
+  .apply-promo-btn,
+  .remove-promo-btn {
+    padding: 8px 12px;
+    font-size: 0.8rem;
   }
 }

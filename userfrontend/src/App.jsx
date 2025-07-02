@@ -1,5 +1,4 @@
-// src/App.jsx
-import { useContext, useEffect, useState } from "react";
+import { useState, useEffect,useContext } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -10,7 +9,7 @@ import LoginPopup from "./components/LoginPopup/LoginPopup";
 import Profile from "./components/Profile/Profile";
 import ProfileSaved from "./components/ProfileSaved/ProfileSaved";
 import Settings from "./components/Settings/Settings";
-import StoreContextProvider, { StoreContext } from "./context/StoreContext";
+import StoreContextProvider from "./context/StoreContext";
 
 import Home from "./screens/Home/Home";
 import Cart from "./screens/Cart/Cart";
@@ -18,28 +17,30 @@ import PlaceOrder from "./screens/PlaceOrder/PlaceOrder";
 import MyOrders from "./screens/MyOrders/MyOrders";
 import Verify from "./screens/Verify/Verify";
 import ExploreMenu from "./components/ExploreMenu/ExploreMenu";
+ 
 
-const AppContent = () => {
-  const location = useLocation();
-  const { showLogin, setShowLogin, token } = useContext(StoreContext);
+const App = () => {
   const [showOnlyFooter, setShowOnlyFooter] = useState(false);
+  const [token, setToken] = useState(localStorage.getItem("token"));
+  const { showLogin } = useContext(StoreContext);
+  const location = useLocation();
 
   useEffect(() => {
     const firstVisit = localStorage.getItem("firstVisit");
     if (!token && !firstVisit) {
-      setShowLogin(true);
       localStorage.setItem("firstVisit", "true");
     }
     setShowOnlyFooter(false);
   }, [token, location.pathname]);
 
   return (
-    <>
-      {showLogin && <LoginPopup setShowLogin={setShowLogin} />}
+    <StoreContextProvider>
       <ToastContainer position="top-right" autoClose={3000} theme="light" />
-
+      {showLogin && <LoginPopup />}
+      
       <div className="app">
         <Navbar setShowOnlyFooter={setShowOnlyFooter} />
+        
         {showOnlyFooter ? (
           <div className="footer-only-view">
             <Footer />
@@ -61,14 +62,7 @@ const AppContent = () => {
           </>
         )}
       </div>
-    </>
+    </StoreContextProvider>
   );
 };
-
-const App = () => (
-  <StoreContextProvider>
-    <AppContent />
-  </StoreContextProvider>
-);
-
-export default App;
+          
