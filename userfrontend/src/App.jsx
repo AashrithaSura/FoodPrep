@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect,useContext } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -20,29 +20,26 @@ import ExploreMenu from "./components/ExploreMenu/ExploreMenu";
  
 
 const App = () => {
-  const [showLogin, setShowLogin] = useState(false);
   const [showOnlyFooter, setShowOnlyFooter] = useState(false);
   const [token, setToken] = useState(localStorage.getItem("token"));
+  const { showLogin } = useContext(StoreContext);
   const location = useLocation();
 
   useEffect(() => {
     const firstVisit = localStorage.getItem("firstVisit");
     if (!token && !firstVisit) {
-      setShowLogin(true);
       localStorage.setItem("firstVisit", "true");
     }
     setShowOnlyFooter(false);
   }, [token, location.pathname]);
 
   return (
-    <StoreContextProvider setShowLogin={setShowLogin}>
+    <StoreContextProvider>
       <ToastContainer position="top-right" autoClose={3000} theme="light" />
-      {showLogin && (
-        <LoginPopup setShowLogin={setShowLogin} forceLogin={!token} />
-      )}
-
+      {showLogin && <LoginPopup />}
+      
       <div className="app">
-        <Navbar setShowLogin={setShowLogin} setShowOnlyFooter={setShowOnlyFooter} />
+        <Navbar setShowOnlyFooter={setShowOnlyFooter} />
         
         {showOnlyFooter ? (
           <div className="footer-only-view">
@@ -60,7 +57,6 @@ const App = () => {
               <Route path="/profile" element={<Profile />} />
               <Route path="/profile-saved" element={<ProfileSaved />} />
               <Route path="/settings" element={<Settings />} />
-
             </Routes>
             {location.pathname === "/" && <Footer />}
           </>
@@ -69,5 +65,4 @@ const App = () => {
     </StoreContextProvider>
   );
 };
-
 export default App;
