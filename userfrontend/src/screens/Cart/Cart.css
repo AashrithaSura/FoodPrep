@@ -49,6 +49,20 @@
     align-items: center;
     gap: 10px;
 }
+.food-image {
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin: 0 auto;
+  display: block;
+}
+
+.food-title {
+  text-align: center;
+  font-weight: 500;
+  font-size: 15px;
+}
 
 .modify-btn {
     border: none;

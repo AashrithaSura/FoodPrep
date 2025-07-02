@@ -92,7 +92,7 @@ const Cart = () => {
                     e.target.src = assets.placeholder_image;
                   }}
                 />
-                <p>{food.name}</p>
+                <p className="food-title">{food.name}</p>
               </div>
               <p>₹{food.price}</p>
               <p>{cartItems[food._id]}</p>
@@ -192,4 +192,3 @@ const Cart = () => {
 };
 
 export default Cart;
-
