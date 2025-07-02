@@ -1,3 +1,4 @@
+
 import { useContext, useState, useEffect, useRef, useMemo } from 'react';
 import { StoreContext } from '../../context/StoreContext';
 import FoodCard from '../FoodCard/FoodCard';
