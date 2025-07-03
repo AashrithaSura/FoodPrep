@@ -11,7 +11,7 @@ const foodSchema = new mongoose.Schema(
       required: true
     },
     price: {
-      type: Number,  
+      type: Number, 
       required: true
     },
     image: {
@@ -23,9 +23,8 @@ const foodSchema = new mongoose.Schema(
       required: true
     },
     adminRating: {
-      type: mongoose.Schema.Types.Decimal128,
-      required: true,
-      default: 0.0 
+      type: Number,
+      default: 0  
     }
   },
   { timestamps: true } 
