@@ -23,7 +23,7 @@ const foodSchema = new mongoose.Schema(
       required: true
     },
     adminRating: {
-      type: decimal,
+      type: mongoose.Schema.Types.Decimal128,
       required: true,
       default: 0.0 
     }
