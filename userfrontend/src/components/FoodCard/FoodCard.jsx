@@ -10,39 +10,22 @@ const FoodCard = ({ _id, name, price, description, image, adminRating }) => {
   const [rating, setRating] = useState(adminRating || 0);
   const [isAdded, setIsAdded] = useState(false);
   const [showFullDesc, setShowFullDesc] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
 
-  // Generate optimized Cloudinary URL with transformations
   const getOptimizedImageUrl = (imgUrl) => {
-    if (!imgUrl) return assets.placeholder_image;
-    
-    if (!imgUrl.startsWith('http')) {
-      return `${url}/uploads/${imgUrl}`;
+    if (!imgUrl || !imgUrl.includes('res.cloudinary.com')) {
+      return assets.placeholder_image;
     }
-    
-    if (imgUrl.includes('res.cloudinary.com')) {
-      // Insert Cloudinary optimizations
-      const parts = imgUrl.split('/upload/');
-      if (parts.length === 2) {
-        return `${parts[0]}/upload/f_auto,q_auto,w_500,c_fill/${parts[1]}`;
-      }
+
+    const parts = imgUrl.split('/upload/');
+    if (parts.length === 2) {
+      return `${parts[0]}/upload/f_auto,q_auto,w_500,c_fill/${parts[1]}`;
     }
-    
+
     return imgUrl;
   };
 
-  // Check mobile viewport
-  useEffect(() => {
-    const checkIfMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-    checkIfMobile();
-    window.addEventListener('resize', checkIfMobile);
-    return () => window.removeEventListener('resize', checkIfMobile);
-  }, []);
-
-  // Fetch user rating
+  
   useEffect(() => {
     if (!userId) return;
 
@@ -54,7 +37,6 @@ const FoodCard = ({ _id, name, price, description, image, adminRating }) => {
       .catch(err => console.error("Failed to fetch user rating", err));
   }, [userId, _id, url]);
 
-  // Preload important images
   useEffect(() => {
     if (image && image.startsWith('http')) {
       const link = document.createElement('link');
@@ -62,10 +44,7 @@ const FoodCard = ({ _id, name, price, description, image, adminRating }) => {
       link.as = 'image';
       link.href = getOptimizedImageUrl(image);
       document.head.appendChild(link);
-      
-      return () => {
-        document.head.removeChild(link);
-      };
+      return () => document.head.removeChild(link);
     }
   }, [image]);
 
@@ -106,7 +85,7 @@ const FoodCard = ({ _id, name, price, description, image, adminRating }) => {
               e.target.onerror = null;
               e.target.src = assets.placeholder_image;
             }}
-            loading={isMobile ? 'lazy' : 'eager'}
+            loading="lazy"
           />
 
           {isAdded && (
@@ -143,7 +122,7 @@ const FoodCard = ({ _id, name, price, description, image, adminRating }) => {
 
           <div 
             className={`food-item-desc-container ${showFullDesc ? 'show-full' : ''}`}
-            onClick={() => isMobile && setShowFullDesc(!showFullDesc)}
+            onClick={() => window.innerWidth <= 768 && setShowFullDesc(!showFullDesc)}
           >
             <p className="food-item-desc"><strong>{description}</strong></p>
           </div>
