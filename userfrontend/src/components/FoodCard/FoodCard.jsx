@@ -10,22 +10,17 @@ const FoodCard = ({ _id, name, price, description, image, adminRating }) => {
   const [rating, setRating] = useState(adminRating || 0);
   const [isAdded, setIsAdded] = useState(false);
   const [showFullDesc, setShowFullDesc] = useState(false);
-  const [imageLoaded, setImageLoaded] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
-  const getOptimizedImageUrl = (imgUrl) => {
-    if (!imgUrl || !imgUrl.includes('res.cloudinary.com')) {
-      return assets.placeholder_image;
-    }
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    checkIfMobile();
+    window.addEventListener('resize', checkIfMobile);
+    return () => window.removeEventListener('resize', checkIfMobile);
+  }, []);
 
-    const parts = imgUrl.split('/upload/');
-    if (parts.length === 2) {
-      return `${parts[0]}/upload/f_auto,q_auto,w_500,c_fill/${parts[1]}`;
-    }
-
-    return imgUrl;
-  };
-
-  
   useEffect(() => {
     if (!userId) return;
 
@@ -35,18 +30,7 @@ const FoodCard = ({ _id, name, price, description, image, adminRating }) => {
         if (userRating) setRating(userRating.rating);
       })
       .catch(err => console.error("Failed to fetch user rating", err));
-  }, [userId, _id, url]);
-
-  useEffect(() => {
-    if (image && image.startsWith('http')) {
-      const link = document.createElement('link');
-      link.rel = 'preload';
-      link.as = 'image';
-      link.href = getOptimizedImageUrl(image);
-      document.head.appendChild(link);
-      return () => document.head.removeChild(link);
-    }
-  }, [image]);
+  }, [userId, _id]);
 
   const handleRatingChange = (val) => {
     if (!userId) {
@@ -75,33 +59,25 @@ const FoodCard = ({ _id, name, price, description, image, adminRating }) => {
     <div className={`food-card ${isAdded ? 'added-effect' : ''}`}>
       <div className='food-item'>
         <div className="food-item-image-container">
-          <img 
-            className={`food-item-image ${imageLoaded ? 'loaded' : 'loading'}`}
-            src={getOptimizedImageUrl(image)}
+        <img 
+            className='food-item-image' 
+            src={image.startsWith('http') ? image : `${url}/uploads/${image}`}
             alt={name}
-            onLoad={() => setImageLoaded(true)}
             onError={(e) => {
-              console.error('Failed to load image:', image);
-              e.target.onerror = null;
-              e.target.src = assets.placeholder_image;
-            }}
-            loading="lazy"
-          />
+            console.log('Failed to load image:', image);
+            e.target.onerror = null;
+            e.target.src = assets.placeholder_image;
+          }}
+         />
 
           {isAdded && (
             <div className="added-confirmation">
               <div className="stars-animation">
                 {[...Array(5)].map((_, i) => (
-                  <div 
-                    key={i} 
-                    className="star" 
-                    style={{
-                      '--delay': `${i * 0.1}s`,
-                      '--angle': `${i * 72}deg`
-                    }}
-                  >
-                    ★
-                  </div>
+                  <div key={i} className="star" style={{
+                    '--delay': `${i * 0.1}s`,
+                    '--angle': `${i * 72}deg`
+                  }}>★</div>
                 ))}
               </div>
               <p>Added to cart!</p>
@@ -122,7 +98,7 @@ const FoodCard = ({ _id, name, price, description, image, adminRating }) => {
 
           <div 
             className={`food-item-desc-container ${showFullDesc ? 'show-full' : ''}`}
-            onClick={() => window.innerWidth <= 768 && setShowFullDesc(!showFullDesc)}
+            onClick={() => isMobile && setShowFullDesc(!showFullDesc)}
           >
             <p className="food-item-desc"><strong>{description}</strong></p>
           </div>
