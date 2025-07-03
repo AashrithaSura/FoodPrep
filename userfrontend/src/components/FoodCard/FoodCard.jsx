@@ -11,7 +11,28 @@ const FoodCard = ({ _id, name, price, description, image, adminRating }) => {
   const [isAdded, setIsAdded] = useState(false);
   const [showFullDesc, setShowFullDesc] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
+  // Generate optimized Cloudinary URL with transformations
+  const getOptimizedImageUrl = (imgUrl) => {
+    if (!imgUrl) return assets.placeholder_image;
+    
+    if (!imgUrl.startsWith('http')) {
+      return `${url}/uploads/${imgUrl}`;
+    }
+    
+    if (imgUrl.includes('res.cloudinary.com')) {
+      // Insert Cloudinary optimizations
+      const parts = imgUrl.split('/upload/');
+      if (parts.length === 2) {
+        return `${parts[0]}/upload/f_auto,q_auto,w_500,c_fill/${parts[1]}`;
+      }
+    }
+    
+    return imgUrl;
+  };
+
+  // Check mobile viewport
   useEffect(() => {
     const checkIfMobile = () => {
       setIsMobile(window.innerWidth <= 768);
@@ -21,6 +42,7 @@ const FoodCard = ({ _id, name, price, description, image, adminRating }) => {
     return () => window.removeEventListener('resize', checkIfMobile);
   }, []);
 
+  // Fetch user rating
   useEffect(() => {
     if (!userId) return;
 
@@ -30,7 +52,22 @@ const FoodCard = ({ _id, name, price, description, image, adminRating }) => {
         if (userRating) setRating(userRating.rating);
       })
       .catch(err => console.error("Failed to fetch user rating", err));
-  }, [userId, _id]);
+  }, [userId, _id, url]);
+
+  // Preload important images
+  useEffect(() => {
+    if (image && image.startsWith('http')) {
+      const link = document.createElement('link');
+      link.rel = 'preload';
+      link.as = 'image';
+      link.href = getOptimizedImageUrl(image);
+      document.head.appendChild(link);
+      
+      return () => {
+        document.head.removeChild(link);
+      };
+    }
+  }, [image]);
 
   const handleRatingChange = (val) => {
     if (!userId) {
@@ -59,25 +96,33 @@ const FoodCard = ({ _id, name, price, description, image, adminRating }) => {
     <div className={`food-card ${isAdded ? 'added-effect' : ''}`}>
       <div className='food-item'>
         <div className="food-item-image-container">
-        <img 
-            className='food-item-image' 
-            src={image.startsWith('http') ? image : `${url}/uploads/${image}`}
+          <img 
+            className={`food-item-image ${imageLoaded ? 'loaded' : 'loading'}`}
+            src={getOptimizedImageUrl(image)}
             alt={name}
+            onLoad={() => setImageLoaded(true)}
             onError={(e) => {
-            console.log('Failed to load image:', image);
-            e.target.onerror = null;
-            e.target.src = assets.placeholder_image;
-          }}
-         />
+              console.error('Failed to load image:', image);
+              e.target.onerror = null;
+              e.target.src = assets.placeholder_image;
+            }}
+            loading={isMobile ? 'lazy' : 'eager'}
+          />
 
           {isAdded && (
             <div className="added-confirmation">
               <div className="stars-animation">
                 {[...Array(5)].map((_, i) => (
-                  <div key={i} className="star" style={{
-                    '--delay': `${i * 0.1}s`,
-                    '--angle': `${i * 72}deg`
-                  }}>★</div>
+                  <div 
+                    key={i} 
+                    className="star" 
+                    style={{
+                      '--delay': `${i * 0.1}s`,
+                      '--angle': `${i * 72}deg`
+                    }}
+                  >
+                    ★
+                  </div>
                 ))}
               </div>
               <p>Added to cart!</p>
