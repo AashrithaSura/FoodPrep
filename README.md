@@ -1,3 +1,4 @@
+🍔 Food Prep App
 
 A full-stack Food Ordering & Management web application where users can browse food items, place orders, rate dishes, and manage their profiles, while admins can manage menu items and orders efficiently.
 
